@@ -1,28 +1,77 @@
 version: "3.8"
 
 services:
-  web:
+  auth-sevice:
     build:
-      context: .
+      context: AuthService
       dockerfile: Dockerfile
-    image: app
-    container_name: app
+    container_name: auth-service
     restart: unless-stopped
-    env_file: .env
+    env_file: AuthService/.env
     ports:
       - "${PORT}:${PORT}"
 
-
-  postgres:
+  auth-postgres:
     image: postgres:14.1-alpine
     restart: always
-    env_file: .env
+    env_file: AuthService/.env
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
     ports:
       - '5432:5432'
+###
+###
+###
+  user-sevice:
+    build:
+      context: UserService
+      dockerfile: Dockerfile
+    container_name: user-service
+    restart: unless-stopped
+    env_file: UserService/.env
+    ports:
+      - "${PORT}:${PORT}"
+
+  user-postgres:
+    image: postgres:14.1-alpine
+    restart: always
+    env_file: UserService/.env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - '5432:5432'
+####
+####
+####
+  inventory-sevice:
+    build:
+      context: InventoryService
+      dockerfile: Dockerfile
+    container_name: inventory-service
+    restart: unless-stopped
+    env_file: InventoryService/.env
+    ports:
+      - "${PORT}:${PORT}"
+
+  inventory-postgres:
+    image: postgres:14.1-alpine
+    restart: always
+    env_file: InventoryService/.env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - '5432:5432'
+
 volumes:
   postgres:
     driver: local
+
+
+
+
