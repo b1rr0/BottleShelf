@@ -1,3 +1,3 @@
-module authService/m/v2
+module authService
 
-go 1.21.1
+go 1.23
