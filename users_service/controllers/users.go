@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"usersService/m/v2/models"
-	"usersService/m/v2/persistence"
+	"users_service/models"
+	"users_service/persistence"
 )
 
 type UsersController struct {

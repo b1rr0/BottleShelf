@@ -1,7 +1,7 @@
 package persistence
 
 import (
-	"usersService/m/v2/models"
+	"users_service/models"
 )
 
 type LocalPersister struct {

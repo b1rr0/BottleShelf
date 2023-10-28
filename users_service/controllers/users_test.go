@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"testing"
-	"usersService/m/v2/models"
-	"usersService/m/v2/persistence"
+	"users_service/models"
+	"users_service/persistence"
 )
 
 func TestNoUsers(t *testing.T) {

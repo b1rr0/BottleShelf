@@ -1,3 +1,3 @@
-module usersService/m/v2
+module users_service
 
 go 1.23
