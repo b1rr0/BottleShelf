@@ -5,7 +5,6 @@ import (
 	"authservice/parsistence"
 	"authservice/parsistence/entities"
 	"errors"
-	"fmt"
 	"time"
 )
 
@@ -18,6 +17,7 @@ func NewJwtHandler(persist parsistence.JwtPersistence) *JwtHandler {
 	handler.persist = persist
 	return handler
 }
+
 func (h *JwtHandler) DecodeToken(token string) (UserClaims, error) {
 	isValid, err := IsUserTokenValid(token)
 	if err != nil {
@@ -26,7 +26,6 @@ func (h *JwtHandler) DecodeToken(token string) (UserClaims, error) {
 	if isValid {
 		user, err := DecoderTokenToUserClaims(token)
 		if !user.isRefresh {
-			fmt.Print("------")
 			return user, err
 		}
 	}
@@ -48,6 +47,7 @@ func (h *JwtHandler) RefreshPair(tokenRefresh string) (models.TokenPairs, error)
 func (h *JwtHandler) CreteNewPair(user models.User) (models.TokenPairs, error) {
 	return h.generatePair(user)
 }
+
 func (h *JwtHandler) generatePair(user models.User) (models.TokenPairs, error) {
 	token, err := BuildUserToken(user, 0*time.Hour, false)
 	if err != nil {
