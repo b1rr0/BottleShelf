@@ -6,6 +6,6 @@ import (
 
 type User struct {
 	Id       uuid.UUID
-	Name     string
+	Username string
 	Password string
 }

@@ -1,0 +1,68 @@
+definitions:
+  models.CheckUserRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  models.CreateUserRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: Manages users and organizations data
+  title: User Service API
+  version: "1.0"
+paths:
+  /health:
+    get:
+      responses:
+        "200":
+          description: OK
+        default:
+          description: ""
+      summary: Get information if service is healthy
+  /users/check:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Log in
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.CheckUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      summary: Check user data (Log in)
+  /users/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      summary: Create a new user
+swagger: "2.0"

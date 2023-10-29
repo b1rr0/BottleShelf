@@ -9,17 +9,17 @@ import (
 func TestNoUsers(t *testing.T) {
 	p := persistence.NewLocalPersister()
 	controller := NewUsersController(p)
-	result := controller.CheckUser(models.CheckUser{Name: "Shrek", Password: ""})
-	if result == true {
-		t.Fatal("CheckUser returned true when no users exit")
+	_, err := controller.CheckUser(models.CheckUserRequest{Username: "Shrek", Password: ""})
+	if err == nil {
+		t.Fatal("CheckUser succeded when no users exit")
 	}
 }
 
 func TestCreateOneUser(t *testing.T) {
 	controller := NewUsersController(persistence.NewLocalPersister())
-	controller.CreateUser(models.CreateUser{Name: "Shrek", Password: "Kek"})
-	result := controller.CheckUser(models.CheckUser{Name: "Shrek", Password: ""})
-	if result == false {
+	controller.CreateUser(models.CreateUserRequest{Username: "Shrek", Password: "Kek"})
+	_, err := controller.CheckUser(models.CheckUserRequest{Username: "Shrek", Password: "Kek"})
+	if err != nil {
 		t.Fatal("CheckUser returned false for existing user")
 	}
 }
