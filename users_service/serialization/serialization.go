@@ -1,4 +1,4 @@
-package servers
+package serialization
 
 import (
 	"encoding/json"

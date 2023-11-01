@@ -4,7 +4,6 @@ import (
 	"users_service/controllers"
 	_ "users_service/docs"
 	"users_service/persistence"
-	"users_service/servers"
 
 	"net/http"
 
@@ -19,13 +18,13 @@ import (
 func main() {
 
 	usersController := controllers.NewUsersController(persistence.NewLocalPersister())
-	server := servers.NewHttpServer(usersController)
+	healthController := controllers.HealthController{}
 
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
-	router.Get("/health", server.ServeHealth)
-	router.Post("/users/create", server.ServeCreateUser)
-	router.Post("/users/check", server.ServeCheckUser)
+	router.Get("/health", healthController.ServeHealth)
+	router.Post("/users/create", usersController.ServeCreateUser)
+	router.Post("/users/check", usersController.ServeCheckUser)
 
 	router.Get("/swagger/*", httpSwagger.Handler(
 		httpSwagger.URL("http://localhost:5101/swagger/doc.json"),
