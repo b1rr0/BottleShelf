@@ -56,8 +56,8 @@ func NewUsersController(persister persistence.UsersPersister) *UsersController {
 //  @Summary      Create a new user
 //  @Accept       json
 //  @Produce      json
-//  @Param		  user	        body		models.CreateUserRequest	    true     "Create user"
-//  @Failure      400
+//  @Param        user    body    models.CreateUserRequest    true    "Create user"
+//  @Failure      400     body    nil                                 "Bad request"
 //  @Success      200
 //  @Router       /users/create [post]
 func (controller *UsersController) ServeCreateUser(writer http.ResponseWriter, req *http.Request) {
@@ -88,8 +88,9 @@ func (controller *UsersController) ServeCreateUser(writer http.ResponseWriter, r
 //  @Summary      Check user data (Log in)
 //  @Accept       json
 //  @Produce      json
-//  @Param		  user	        body		models.CheckUserRequest	    true     "Log in"
-//  @Failure      404
+//  @Param        user    body    models.CheckUserRequest    true    "Log in"
+//  @Failure      400     body    nil                                "Bad request"
+//  @Failure      404     body    nil                                "User not found"
 //  @Success      200
 //  @Router       /users/check [post]
 func (controller *UsersController) ServeCheckUser(writer http.ResponseWriter, req *http.Request) {

@@ -43,8 +43,14 @@ paths:
       responses:
         "200":
           description: OK
+        "400":
+          description: Bad request
+          schema:
+            type: body
         "404":
-          description: Not Found
+          description: User not found
+          schema:
+            type: body
       summary: Check user data (Log in)
   /users/create:
     post:
@@ -63,6 +69,8 @@ paths:
         "200":
           description: OK
         "400":
-          description: Bad Request
+          description: Bad request
+          schema:
+            type: body
       summary: Create a new user
 swagger: "2.0"

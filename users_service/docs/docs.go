@@ -52,8 +52,17 @@ const docTemplate = `{
                     "200": {
                         "description": "OK"
                     },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "body"
+                        }
+                    },
                     "404": {
-                        "description": "Not Found"
+                        "description": "User not found",
+                        "schema": {
+                            "type": "body"
+                        }
                     }
                 }
             }
@@ -83,7 +92,10 @@ const docTemplate = `{
                         "description": "OK"
                     },
                     "400": {
-                        "description": "Bad Request"
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "body"
+                        }
                     }
                 }
             }
