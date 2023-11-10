@@ -4,11 +4,11 @@ package enttest
 
 import (
 	"context"
-	"userService/m/v2/ent"
+	"inventoryService/m/v2/ent"
 	// required by schema hooks.
-	_ "userService/m/v2/ent/runtime"
+	_ "inventoryService/m/v2/ent/runtime"
 
-	"userService/m/v2/ent/migrate"
+	"inventoryService/m/v2/ent/migrate"
 
 	"entgo.io/ent/dialect/sql/schema"
 )

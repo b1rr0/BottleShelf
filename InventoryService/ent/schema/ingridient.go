@@ -15,7 +15,7 @@ type Ingridient struct {
 // Fields of the Ingridient.
 func (Ingridient) Fields() []ent.Field {
 	return []ent.Field{
-		field.UUID("id", uuid.UUID{}).Default(uuid.New),
+		field.UUID("id", uuid.UUID{}).Default(uuid.New).StorageKey("id"),
 		field.String("name").Unique(),
 		field.Float("alcohol").Default(0),
 		field.Bool("isDry"),

@@ -7,9 +7,9 @@ import (
 	"errors"
 	"fmt"
 	"sync"
-	"userService/m/v2/ent/ingridient"
-	"userService/m/v2/ent/predicate"
-	"userService/m/v2/ent/stockpile"
+	"inventoryService/m/v2/ent/ingridient"
+	"inventoryService/m/v2/ent/predicate"
+	"inventoryService/m/v2/ent/stockpile"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"

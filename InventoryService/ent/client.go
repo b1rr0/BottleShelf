@@ -9,10 +9,10 @@ import (
 	"log"
 	"reflect"
 
-	"userService/m/v2/ent/migrate"
+	"inventoryService/m/v2/ent/migrate"
 
-	"userService/m/v2/ent/ingridient"
-	"userService/m/v2/ent/stockpile"
+	"inventoryService/m/v2/ent/ingridient"
+	"inventoryService/m/v2/ent/stockpile"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"

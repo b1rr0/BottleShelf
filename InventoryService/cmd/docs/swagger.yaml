@@ -1,0 +1,35 @@
+basePath: /api/v1
+info:
+  contact: {}
+paths:
+  /inventory:
+    get:
+      consumes:
+      - application/json
+      description: Get complete list of all ingridients availible for user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Gets list of all ingridients
+      tags:
+      - example
+  /ping:
+    get:
+      consumes:
+      - application/json
+      description: do ping
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: ping
+      tags:
+      - example
+swagger: "2.0"

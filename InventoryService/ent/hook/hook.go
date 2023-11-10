@@ -5,7 +5,7 @@ package hook
 import (
 	"context"
 	"fmt"
-	"userService/m/v2/ent"
+	"inventoryService/m/v2/ent"
 )
 
 // The IngridientFunc type is an adapter to allow the use of ordinary

@@ -4,8 +4,8 @@ package ent
 
 import (
 	"context"
-	"userService/m/v2/ent/predicate"
-	"userService/m/v2/ent/stockpile"
+	"inventoryService/m/v2/ent/predicate"
+	"inventoryService/m/v2/ent/stockpile"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"

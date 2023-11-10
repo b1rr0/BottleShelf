@@ -5,7 +5,7 @@ package ent
 import (
 	"fmt"
 	"strings"
-	"userService/m/v2/ent/ingridient"
+	"inventoryService/m/v2/ent/ingridient"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"

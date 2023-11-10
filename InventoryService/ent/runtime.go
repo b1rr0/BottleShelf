@@ -3,8 +3,8 @@
 package ent
 
 import (
-	"userService/m/v2/ent/ingridient"
-	"userService/m/v2/ent/schema"
+	"inventoryService/m/v2/ent/ingridient"
+	"inventoryService/m/v2/ent/schema"
 
 	"github.com/google/uuid"
 )
