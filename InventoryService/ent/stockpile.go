@@ -4,9 +4,9 @@ package ent
 
 import (
 	"fmt"
-	"strings"
 	"inventoryService/m/v2/ent/ingridient"
 	"inventoryService/m/v2/ent/stockpile"
+	"strings"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"

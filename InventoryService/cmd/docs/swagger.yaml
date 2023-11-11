@@ -2,6 +2,33 @@ basePath: /api/v1
 info:
   contact: {}
 paths:
+  /ingridient:
+    post:
+      consumes:
+      - application/json
+      description: Add new ingridient to database
+      parameters:
+      - description: username
+        in: formData
+        name: username
+        required: true
+        type: string
+      - description: username
+        in: body
+        name: username
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Adds new ingridient
+      tags:
+      - example
   /inventory:
     get:
       consumes:
@@ -12,8 +39,6 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            type: string
       summary: Gets list of all ingridients
       tags:
       - example

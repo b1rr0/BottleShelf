@@ -6,10 +6,10 @@ import (
 	"context"
 	"database/sql/driver"
 	"fmt"
-	"math"
 	"inventoryService/m/v2/ent/ingridient"
 	"inventoryService/m/v2/ent/predicate"
 	"inventoryService/m/v2/ent/stockpile"
+	"math"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"

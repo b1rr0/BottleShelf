@@ -6,10 +6,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"sync"
 	"inventoryService/m/v2/ent/ingridient"
 	"inventoryService/m/v2/ent/predicate"
 	"inventoryService/m/v2/ent/stockpile"
+	"sync"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
