@@ -56,14 +56,21 @@ func ValidColumn(column string) bool {
 }
 
 var (
+	// NameValidator is a validator for the "name" field. It is called by the builders before save.
+	NameValidator func(string) error
 	// DefaultAlcohol holds the default value on creation for the "alcohol" field.
 	DefaultAlcohol float64
+	// DefaultIsDry holds the default value on creation for the "isDry" field.
+	DefaultIsDry bool
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )
 
 // MeasurmentUnit defines the type for the "measurmentUnit" enum field.
 type MeasurmentUnit string
+
+// MeasurmentUnitMl is the default value of the MeasurmentUnit enum.
+const DefaultMeasurmentUnit = MeasurmentUnitMl
 
 // MeasurmentUnit values.
 const (

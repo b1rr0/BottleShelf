@@ -13,8 +13,8 @@ var (
 		{Name: "id", Type: field.TypeUUID},
 		{Name: "name", Type: field.TypeString, Unique: true},
 		{Name: "alcohol", Type: field.TypeFloat64, Default: 0},
-		{Name: "is_dry", Type: field.TypeBool},
-		{Name: "measurment_unit", Type: field.TypeEnum, Enums: []string{"ml", "g", "pcs"}},
+		{Name: "is_dry", Type: field.TypeBool, Default: false},
+		{Name: "measurment_unit", Type: field.TypeEnum, Enums: []string{"ml", "g", "pcs"}, Default: "ml"},
 	}
 	// IngridientsTable holds the schema information for the "ingridients" table.
 	IngridientsTable = &schema.Table{

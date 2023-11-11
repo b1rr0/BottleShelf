@@ -61,9 +61,25 @@ func (iu *IngridientUpdate) SetIsDry(b bool) *IngridientUpdate {
 	return iu
 }
 
+// SetNillableIsDry sets the "isDry" field if the given value is not nil.
+func (iu *IngridientUpdate) SetNillableIsDry(b *bool) *IngridientUpdate {
+	if b != nil {
+		iu.SetIsDry(*b)
+	}
+	return iu
+}
+
 // SetMeasurmentUnit sets the "measurmentUnit" field.
 func (iu *IngridientUpdate) SetMeasurmentUnit(value ingridient.MeasurmentUnit) *IngridientUpdate {
 	iu.mutation.SetMeasurmentUnit(value)
+	return iu
+}
+
+// SetNillableMeasurmentUnit sets the "measurmentUnit" field if the given value is not nil.
+func (iu *IngridientUpdate) SetNillableMeasurmentUnit(value *ingridient.MeasurmentUnit) *IngridientUpdate {
+	if value != nil {
+		iu.SetMeasurmentUnit(*value)
+	}
 	return iu
 }
 
@@ -137,6 +153,11 @@ func (iu *IngridientUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (iu *IngridientUpdate) check() error {
+	if v, ok := iu.mutation.Name(); ok {
+		if err := ingridient.NameValidator(v); err != nil {
+			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Ingridient.name": %w`, err)}
+		}
+	}
 	if v, ok := iu.mutation.MeasurmentUnit(); ok {
 		if err := ingridient.MeasurmentUnitValidator(v); err != nil {
 			return &ValidationError{Name: "measurmentUnit", err: fmt.Errorf(`ent: validator failed for field "Ingridient.measurmentUnit": %w`, err)}
@@ -270,9 +291,25 @@ func (iuo *IngridientUpdateOne) SetIsDry(b bool) *IngridientUpdateOne {
 	return iuo
 }
 
+// SetNillableIsDry sets the "isDry" field if the given value is not nil.
+func (iuo *IngridientUpdateOne) SetNillableIsDry(b *bool) *IngridientUpdateOne {
+	if b != nil {
+		iuo.SetIsDry(*b)
+	}
+	return iuo
+}
+
 // SetMeasurmentUnit sets the "measurmentUnit" field.
 func (iuo *IngridientUpdateOne) SetMeasurmentUnit(iu ingridient.MeasurmentUnit) *IngridientUpdateOne {
 	iuo.mutation.SetMeasurmentUnit(iu)
+	return iuo
+}
+
+// SetNillableMeasurmentUnit sets the "measurmentUnit" field if the given value is not nil.
+func (iuo *IngridientUpdateOne) SetNillableMeasurmentUnit(iu *ingridient.MeasurmentUnit) *IngridientUpdateOne {
+	if iu != nil {
+		iuo.SetMeasurmentUnit(*iu)
+	}
 	return iuo
 }
 
@@ -359,6 +396,11 @@ func (iuo *IngridientUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (iuo *IngridientUpdateOne) check() error {
+	if v, ok := iuo.mutation.Name(); ok {
+		if err := ingridient.NameValidator(v); err != nil {
+			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Ingridient.name": %w`, err)}
+		}
+	}
 	if v, ok := iuo.mutation.MeasurmentUnit(); ok {
 		if err := ingridient.MeasurmentUnitValidator(v); err != nil {
 			return &ValidationError{Name: "measurmentUnit", err: fmt.Errorf(`ent: validator failed for field "Ingridient.measurmentUnit": %w`, err)}

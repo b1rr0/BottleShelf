@@ -15,10 +15,18 @@ import (
 func init() {
 	ingridientFields := schema.Ingridient{}.Fields()
 	_ = ingridientFields
+	// ingridientDescName is the schema descriptor for name field.
+	ingridientDescName := ingridientFields[1].Descriptor()
+	// ingridient.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	ingridient.NameValidator = ingridientDescName.Validators[0].(func(string) error)
 	// ingridientDescAlcohol is the schema descriptor for alcohol field.
 	ingridientDescAlcohol := ingridientFields[2].Descriptor()
 	// ingridient.DefaultAlcohol holds the default value on creation for the alcohol field.
 	ingridient.DefaultAlcohol = ingridientDescAlcohol.Default.(float64)
+	// ingridientDescIsDry is the schema descriptor for isDry field.
+	ingridientDescIsDry := ingridientFields[3].Descriptor()
+	// ingridient.DefaultIsDry holds the default value on creation for the isDry field.
+	ingridient.DefaultIsDry = ingridientDescIsDry.Default.(bool)
 	// ingridientDescID is the schema descriptor for id field.
 	ingridientDescID := ingridientFields[0].Descriptor()
 	// ingridient.DefaultID holds the default value on creation for the id field.

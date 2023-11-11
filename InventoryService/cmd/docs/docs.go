@@ -16,6 +16,35 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/ingridient": {
+            "put": {
+                "description": "Add new ingridient to database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Inventory manipulation"
+                ],
+                "summary": "Adds new ingridient",
+                "parameters": [
+                    {
+                        "description": "Item and it's data data",
+                        "name": "item",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ItemModel"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
             "post": {
                 "description": "Add new ingridient to database",
                 "consumes": [
@@ -25,33 +54,85 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "example"
+                    "Inventory manipulation"
                 ],
                 "summary": "Adds new ingridient",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "username",
-                        "name": "username",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "description": "username",
-                        "name": "username",
+                        "description": "Item data",
+                        "name": "item",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/models.ItemModelCreate"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "string"
-                        }
+                        "description": "OK"
+                    }
+                }
+            },
+            "delete": {
+                "description": "Add new ingridient to database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Inventory manipulation"
+                ],
+                "summary": "Adds new ingridient",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/ingridient/search": {
+            "get": {
+                "description": "Get complete list of all ingridients availible for user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Inventory manipulation"
+                ],
+                "summary": "Gets list of all ingridients",
+                "parameters": [
+                    {
+                        "type": "number",
+                        "name": "alcohol",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "name": "isDry",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "name",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
                     }
                 }
             }
@@ -66,7 +147,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "example"
+                    "Inventory manipulation"
                 ],
                 "summary": "Gets list of all ingridients",
                 "responses": {
@@ -86,7 +167,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "example"
+                    "Common"
                 ],
                 "summary": "ping",
                 "responses": {
@@ -96,6 +177,45 @@ const docTemplate = `{
                             "type": "string"
                         }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.ItemModel": {
+            "type": "object",
+            "properties": {
+                "alcohol": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "isDry": {
+                    "type": "boolean"
+                },
+                "measurmentUnit": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ItemModelCreate": {
+            "type": "object",
+            "properties": {
+                "alcohol": {
+                    "type": "number"
+                },
+                "isDry": {
+                    "type": "boolean"
+                },
+                "measurmentUnit": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
                 }
             }
         }

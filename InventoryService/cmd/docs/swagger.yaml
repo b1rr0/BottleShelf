@@ -1,34 +1,110 @@
 basePath: /api/v1
+definitions:
+  models.ItemModel:
+    properties:
+      alcohol:
+        type: number
+      id:
+        type: string
+      isDry:
+        type: boolean
+      measurmentUnit:
+        type: string
+      name:
+        type: string
+    type: object
+  models.ItemModelCreate:
+    properties:
+      alcohol:
+        type: number
+      isDry:
+        type: boolean
+      measurmentUnit:
+        type: string
+      name:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
   /ingridient:
-    post:
+    delete:
       consumes:
       - application/json
       description: Add new ingridient to database
       parameters:
-      - description: username
-        in: formData
-        name: username
-        required: true
+      - in: query
+        name: id
         type: string
-      - description: username
-        in: body
-        name: username
-        required: true
-        schema:
-          type: string
       produces:
       - application/json
       responses:
         "200":
           description: OK
-          schema:
-            type: string
       summary: Adds new ingridient
       tags:
-      - example
+      - Inventory manipulation
+    post:
+      consumes:
+      - application/json
+      description: Add new ingridient to database
+      parameters:
+      - description: Item data
+        in: body
+        name: item
+        required: true
+        schema:
+          $ref: '#/definitions/models.ItemModelCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Adds new ingridient
+      tags:
+      - Inventory manipulation
+    put:
+      consumes:
+      - application/json
+      description: Add new ingridient to database
+      parameters:
+      - description: Item and it's data data
+        in: body
+        name: item
+        required: true
+        schema:
+          $ref: '#/definitions/models.ItemModel'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Adds new ingridient
+      tags:
+      - Inventory manipulation
+  /ingridient/search:
+    get:
+      consumes:
+      - application/json
+      description: Get complete list of all ingridients availible for user
+      parameters:
+      - in: query
+        name: alcohol
+        type: number
+      - in: query
+        name: isDry
+        type: boolean
+      - in: query
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Gets list of all ingridients
+      tags:
+      - Inventory manipulation
   /inventory:
     get:
       consumes:
@@ -41,7 +117,7 @@ paths:
           description: OK
       summary: Gets list of all ingridients
       tags:
-      - example
+      - Inventory manipulation
   /ping:
     get:
       consumes:
@@ -56,5 +132,5 @@ paths:
             type: string
       summary: ping
       tags:
-      - example
+      - Common
 swagger: "2.0"

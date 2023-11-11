@@ -47,9 +47,25 @@ func (ic *IngridientCreate) SetIsDry(b bool) *IngridientCreate {
 	return ic
 }
 
+// SetNillableIsDry sets the "isDry" field if the given value is not nil.
+func (ic *IngridientCreate) SetNillableIsDry(b *bool) *IngridientCreate {
+	if b != nil {
+		ic.SetIsDry(*b)
+	}
+	return ic
+}
+
 // SetMeasurmentUnit sets the "measurmentUnit" field.
 func (ic *IngridientCreate) SetMeasurmentUnit(iu ingridient.MeasurmentUnit) *IngridientCreate {
 	ic.mutation.SetMeasurmentUnit(iu)
+	return ic
+}
+
+// SetNillableMeasurmentUnit sets the "measurmentUnit" field if the given value is not nil.
+func (ic *IngridientCreate) SetNillableMeasurmentUnit(iu *ingridient.MeasurmentUnit) *IngridientCreate {
+	if iu != nil {
+		ic.SetMeasurmentUnit(*iu)
+	}
 	return ic
 }
 
@@ -121,6 +137,14 @@ func (ic *IngridientCreate) defaults() {
 		v := ingridient.DefaultAlcohol
 		ic.mutation.SetAlcohol(v)
 	}
+	if _, ok := ic.mutation.IsDry(); !ok {
+		v := ingridient.DefaultIsDry
+		ic.mutation.SetIsDry(v)
+	}
+	if _, ok := ic.mutation.MeasurmentUnit(); !ok {
+		v := ingridient.DefaultMeasurmentUnit
+		ic.mutation.SetMeasurmentUnit(v)
+	}
 	if _, ok := ic.mutation.ID(); !ok {
 		v := ingridient.DefaultID()
 		ic.mutation.SetID(v)
@@ -131,6 +155,11 @@ func (ic *IngridientCreate) defaults() {
 func (ic *IngridientCreate) check() error {
 	if _, ok := ic.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Ingridient.name"`)}
+	}
+	if v, ok := ic.mutation.Name(); ok {
+		if err := ingridient.NameValidator(v); err != nil {
+			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Ingridient.name": %w`, err)}
+		}
 	}
 	if _, ok := ic.mutation.Alcohol(); !ok {
 		return &ValidationError{Name: "alcohol", err: errors.New(`ent: missing required field "Ingridient.alcohol"`)}

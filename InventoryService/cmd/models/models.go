@@ -4,18 +4,29 @@ import (
 	"github.com/google/uuid"
 )
 
-const (
-	ml  Unit = 0
-	g   Unit = 1
-	pcs Unit = 2
-)
-
 type Unit int
 
 type ItemModel struct {
-	Id             uuid.UUID
-	Name           string
-	Alcohol        float64
-	IsDry          bool
-	MeasurmentUnit Unit
+	Id             uuid.UUID `json:"id"`
+	Name           string    `json:"name"`
+	Alcohol        float64   `json:"alcohol"`
+	IsDry          bool      `json:"isDry"`
+	MeasurmentUnit string    `json:"measurmentUnit"`
+}
+
+type ItemModelCreate struct {
+	Name           string  `json:"name"`
+	Alcohol        float64 `json:"alcohol"`
+	IsDry          bool    `json:"isDry"`
+	MeasurmentUnit string  `json:"measurmentUnit"`
+}
+
+type ItemModelFilters struct {
+	Name    string  `json:"name"`
+	Alcohol float64 `json:"alcohol"`
+	IsDry   bool    `json:"isDry"`
+}
+
+type ItemModelDelete struct {
+	Id uuid.UUID `json:"id"`
 }
