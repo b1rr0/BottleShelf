@@ -53,7 +53,7 @@ func (controller *ItemController) GetIngridientsList(c *gin.Context) {
 // @BasePath /api/v1
 
 // GetIngridientsList godoc
-// @Summary 	Gets list of all ingridients
+// @Summary 	Gets list ingridients by filter
 // @Description Get complete list of all ingridients availible for user
 // @Tags 		Inventory manipulation
 // @Accept 		json
@@ -132,7 +132,7 @@ func (controller *ItemController) AddIngridient(c *gin.Context) {
 // @BasePath /api/v1
 
 // AddIngridient godoc
-// @Summary 	Adds new ingridient
+// @Summary 	Changes ingridient information
 // @Description Add new ingridient to database
 // @Tags 		Inventory manipulation
 // @Accept 		json
@@ -179,7 +179,7 @@ func (controller *ItemController) ChangeIngridient(c *gin.Context) {
 // @BasePath /api/v1
 
 // AddIngridient godoc
-// @Summary 	Adds new ingridient
+// @Summary 	Deletes ingridient
 // @Description Add new ingridient to database
 // @Tags 		Inventory manipulation
 // @Accept 		json
