@@ -22,9 +22,10 @@ type ItemModelCreate struct {
 }
 
 type ItemModelFilters struct {
-	Name    string  `json:"name"`
-	Alcohol float64 `json:"alcohol"`
-	IsDry   bool    `json:"isDry"`
+	Name       string  `form:"name"`
+	AlcoholMin float64 `form:"alcoholmin"`
+	AlcoholMax float64 `form:"alcoholmax"`
+	IsDry      bool    `form:"isDry"`
 }
 
 type ItemModelDelete struct {

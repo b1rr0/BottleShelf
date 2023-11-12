@@ -62,21 +62,23 @@ func (controller *ItemController) GetIngridientsList(c *gin.Context) {
 // @Success		200
 // @Router 		/ingridient/search [get]
 func (controller *ItemController) GetIngridientByFilter(c *gin.Context) {
-	jsonData, err := c.GetRawData() // TODO actually make it work
+	var filters models.ItemModelFilters
+	filters.AlcoholMax = 1
+
+	err := c.BindQuery(&filters)
+
 	if err != nil {
 		ResponseJSON(c, http.StatusBadRequest, err.Error(), nil)
 		return
 	}
 
-	var filters models.ItemModelFilters
-	json.Unmarshal(jsonData, &filters)
-
 	ingridients, err := controller.Client.Ingridient.
 		Query().
 		Where(
 			ingridient.And(
-				ingridient.NameContains(filters.Name),
-				ingridient.Alcohol(filters.Alcohol),
+				ingridient.NameContainsFold(filters.Name),
+				ingridient.AlcoholGT(filters.AlcoholMin),
+				ingridient.AlcoholLT(filters.AlcoholMax),
 				ingridient.IsDry(filters.IsDry),
 			),
 		).

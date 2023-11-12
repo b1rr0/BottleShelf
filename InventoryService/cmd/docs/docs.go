@@ -116,7 +116,12 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "number",
-                        "name": "alcohol",
+                        "name": "alcoholmax",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "name": "alcoholmin",
                         "in": "query"
                     },
                     {

@@ -30,7 +30,6 @@ func main() {
 	itemController.Client = svr.db
 
 	runHttpServer(itemController)
-
 	closeDatabase()
 }
 

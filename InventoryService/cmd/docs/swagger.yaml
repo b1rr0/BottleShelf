@@ -89,7 +89,10 @@ paths:
       description: Get complete list of all ingridients availible for user
       parameters:
       - in: query
-        name: alcohol
+        name: alcoholmax
+        type: number
+      - in: query
+        name: alcoholmin
         type: number
       - in: query
         name: isDry
