@@ -28,6 +28,81 @@ const docTemplate = `{
                 }
             }
         },
+        "/orgs": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get all usernames",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "body"
+                        }
+                    }
+                }
+            }
+        },
+        "/orgs/create": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a new organization",
+                "parameters": [
+                    {
+                        "description": "Create user",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CreateOrgRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "body"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "body"
+                        }
+                    }
+                }
+            }
+        },
+        "/users": {
+            "get": {
+                "description": "Debug-only endpoint, should not be called from api gateway",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get all usernames",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "body"
+                        }
+                    }
+                }
+            }
+        },
         "/users/check": {
             "post": {
                 "consumes": [
@@ -50,7 +125,10 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "Successful log in",
+                        "schema": {
+                            "type": "body"
+                        }
                     },
                     "400": {
                         "description": "Bad request",
@@ -109,6 +187,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.CreateOrgRequest": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "owner": {
                     "type": "string"
                 }
             }

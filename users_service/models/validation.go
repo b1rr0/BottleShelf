@@ -17,3 +17,12 @@ func ValidatePassword(password string) bool {
 	}
 	return true
 }
+
+func ValidateOrgname(orgname string) bool {
+	// TODO: Define more accurate validness criteria
+	// Check special characters e.t.c.
+	if len(orgname) == 0 {
+		return false
+	}
+	return true
+}

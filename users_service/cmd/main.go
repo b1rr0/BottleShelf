@@ -17,14 +17,23 @@ import (
 // @description     Manages users and organizations data
 func main() {
 
-	usersController := controllers.NewUsersController(persistence.NewLocalPersister())
+	persister := persistence.NewPostgrePersister()
+	defer persister.Deinit()
+	usersController := controllers.NewUsersController(persister)
+	orgController := controllers.NewOrgController(persister)
 	healthController := controllers.HealthController{}
 
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
+	// Health
 	router.Get("/health", healthController.ServeHealth)
+	// Users
 	router.Post("/users/create", usersController.ServeCreateUser)
 	router.Post("/users/check", usersController.ServeCheckUser)
+	router.Get("/users", usersController.ServeAllUsernames)
+	// Orgs
+	router.Post("/orgs/create", orgController.ServeCreateOrg)
+	router.Get("/orgs", orgController.ServeAllOrgnames)
 
 	router.Get("/swagger/*", httpSwagger.Handler(
 		httpSwagger.URL("http://localhost:5101/swagger/doc.json"),

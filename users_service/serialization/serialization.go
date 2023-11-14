@@ -23,3 +23,13 @@ func DeserializeRequest(req *http.Request, result models.Validatable) (status in
 	}
 	return http.StatusOK
 }
+
+func SerializeResponse(writer http.ResponseWriter, response any) {
+	marshalled, err := json.Marshal(response)
+	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	writer.WriteHeader(http.StatusOK)
+	writer.Write(marshalled)
+}

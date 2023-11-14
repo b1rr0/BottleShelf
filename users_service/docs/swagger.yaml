@@ -6,6 +6,13 @@ definitions:
       username:
         type: string
     type: object
+  models.CreateOrgRequest:
+    properties:
+      name:
+        type: string
+      owner:
+        type: string
+    type: object
   models.CreateUserRequest:
     properties:
       password:
@@ -27,6 +34,54 @@ paths:
         default:
           description: ""
       summary: Get information if service is healthy
+  /orgs:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+          schema:
+            type: body
+      summary: Get all usernames
+  /orgs/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateOrgRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: body
+        "400":
+          description: Bad request
+          schema:
+            type: body
+      summary: Create a new organization
+  /users:
+    get:
+      description: Debug-only endpoint, should not be called from api gateway
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+          schema:
+            type: body
+      summary: Get all usernames
   /users/check:
     post:
       consumes:
@@ -42,7 +97,9 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Successful log in
+          schema:
+            type: body
         "400":
           description: Bad request
           schema:
