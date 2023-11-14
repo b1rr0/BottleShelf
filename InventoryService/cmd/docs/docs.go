@@ -17,7 +17,7 @@ const docTemplate = `{
     "paths": {
         "/ingridient": {
             "put": {
-                "description": "Change ingridient in the database by id",
+                "description": "Change ingridient in the database by id. All fields are required, otherwise default value will be used.",
                 "consumes": [
                     "application/json"
                 ],
@@ -41,7 +41,22 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "202": {
-                        "description": "Accepted"
+                        "description": "Accepted",
+                        "schema": {
+                            "$ref": "#/definitions/models.ItemModel"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -70,7 +85,16 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created"
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.ItemModel"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -92,7 +116,22 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "202": {
-                        "description": "Accepted"
+                        "description": "Accepted",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 }
             }
@@ -131,7 +170,16 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ItemModel"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 }
             }
@@ -148,7 +196,10 @@ const docTemplate = `{
                 "summary": "Gets list of all ingridients",
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ItemModel"
+                        }
                     }
                 }
             }

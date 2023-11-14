@@ -39,6 +39,16 @@ paths:
       responses:
         "202":
           description: Accepted
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
       summary: Deletes ingridient
       tags:
       - Inventory manipulation
@@ -58,13 +68,20 @@ paths:
       responses:
         "201":
           description: Created
+          schema:
+            $ref: '#/definitions/models.ItemModel'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
       summary: Adds new ingridient
       tags:
       - Inventory manipulation
     put:
       consumes:
       - application/json
-      description: Change ingridient in the database by id
+      description: Change ingridient in the database by id. All fields are required,
+        otherwise default value will be used.
       parameters:
       - description: Item id and it's new data
         in: body
@@ -77,6 +94,16 @@ paths:
       responses:
         "202":
           description: Accepted
+          schema:
+            $ref: '#/definitions/models.ItemModel'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
       summary: Changes ingridient information
       tags:
       - Inventory manipulation
@@ -101,6 +128,12 @@ paths:
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/models.ItemModel'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
       summary: Gets list ingridients by filter
       tags:
       - Inventory manipulation
@@ -112,6 +145,8 @@ paths:
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/models.ItemModel'
       summary: Gets list of all ingridients
       tags:
       - Inventory manipulation

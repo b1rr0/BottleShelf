@@ -20,7 +20,7 @@ func (controller *ItemController) ValidateNewIngridient(c *gin.Context, item mod
 		Query().
 		Where(ingridient.Name(item.Name)).
 		Exist(c)
-
+	passed = true
 	errorMessage = ""
 
 	if err != nil {
@@ -31,18 +31,21 @@ func (controller *ItemController) ValidateNewIngridient(c *gin.Context, item mod
 	}
 
 	if isAlreadyExists {
-		errorMessage += resources.AlreadyExists + " "
+		errorMessage += resources.AlreadyExists
 		passed = false
+		return
 	}
 
 	if item.Alcohol < 0 || item.Alcohol > 1 {
-		errorMessage += resources.InadequateAlcohol + " "
+		errorMessage += resources.InadequateAlcohol
 		passed = false
+		return
 	}
 
 	if !(item.MeasurmentUnit == "pcs" || item.MeasurmentUnit == "g" || item.MeasurmentUnit == "ml" || item.MeasurmentUnit == "") {
-		errorMessage += resources.WrongMeasurement + " "
+		errorMessage += resources.WrongMeasurement
 		passed = false
+		return
 	}
 	return
 }
@@ -54,7 +57,7 @@ func (controller *ItemController) ValidateNewIngridient(c *gin.Context, item mod
 // @Description    Get complete list of all ingridients availible for user
 // @Tags           Inventory manipulation
 // @Produce        application/json
-// @Success        200
+// @Success        200 {object} models.ItemModel
 // @Router         /inventory [get]
 func (controller *ItemController) GetIngridientsList(c *gin.Context) {
 	ingridients, err := controller.Client.Ingridient.
@@ -77,8 +80,8 @@ func (controller *ItemController) GetIngridientsList(c *gin.Context) {
 // @Tags            Inventory manipulation
 // @Produce         application/json
 // @Param           item query models.ItemModelFilters true "Item to search for"
-// @Success         200
-// @Failure         400
+// @Success         200 {object} models.ItemModel
+// @Failure         400 {string} string
 // @Router          /ingridient/search [get]
 func (controller *ItemController) GetIngridientByFilter(c *gin.Context) {
 	var filters models.ItemModelFilters
@@ -125,8 +128,8 @@ func (controller *ItemController) GetIngridientByFilter(c *gin.Context) {
 // @Accept            json
 // @Produce           application/json
 // @Param             item body models.ItemModelCreate true "Item data"
-// @Success           201
-// @Failure           400
+// @Success           201 {object} models.ItemModel
+// @Failure           400 {string} string
 // @Router            /ingridient [post]
 func (controller *ItemController) AddIngridient(c *gin.Context) {
 	jsonData, err := c.GetRawData()
@@ -165,14 +168,14 @@ func (controller *ItemController) AddIngridient(c *gin.Context) {
 
 // AddIngridient godoc
 // @Summary           Changes ingridient information
-// @Description       Change ingridient in the database by id
+// @Description       Change ingridient in the database by id. All fields are required, otherwise default value will be used.
 // @Tags              Inventory manipulation
 // @Accept            json
 // @Produce           application/json
 // @Param             item body models.ItemModel true "Item id and it's new data"
-// @Success           202
-// @Failure           400
-// @Failure           404
+// @Success           202 {object} models.ItemModel
+// @Failure           400 {string} string
+// @Failure           404 {string} string
 // @Router            /ingridient [put]
 func (controller *ItemController) ChangeIngridient(c *gin.Context) {
 	jsonData, err := c.GetRawData()
@@ -191,7 +194,7 @@ func (controller *ItemController) ChangeIngridient(c *gin.Context) {
 
 	if err != nil {
 		if ingridientOld == nil {
-			resources.ResponseJSON(c, http.StatusNotFound, err.Error(), nil)
+			resources.ResponseJSON(c, http.StatusNotFound, resources.IngridientNotFound, nil)
 			return
 		}
 		resources.ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
@@ -222,9 +225,9 @@ func (controller *ItemController) ChangeIngridient(c *gin.Context) {
 // @Tags               Inventory manipulation
 // @Produce            application/json
 // @Param              itemId query models.ItemModelDelete true "item id"
-// @Success            202
-// @Failure            400
-// @Failure            404
+// @Success            202 {string} string
+// @Failure            400 {string} string
+// @Failure            404 {string} string
 // @Router             /ingridient [delete]
 func (controller *ItemController) DeleteIngridient(c *gin.Context) {
 	jsonData, err := c.GetRawData()
@@ -243,7 +246,7 @@ func (controller *ItemController) DeleteIngridient(c *gin.Context) {
 
 	if err != nil {
 		if ingridientOld == nil {
-			resources.ResponseJSON(c, http.StatusNotFound, err.Error(), nil)
+			resources.ResponseJSON(c, http.StatusNotFound, resources.IngridientNotFound, nil)
 			return
 		}
 		resources.ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
