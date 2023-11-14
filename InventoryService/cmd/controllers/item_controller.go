@@ -83,7 +83,7 @@ func (controller *ItemController) GetIngridientsList(c *gin.Context) {
 // @Success         200 {object} models.ItemModel
 // @Failure         400 {string} string
 // @Router          /ingridient/search [get]
-func (controller *ItemController) GetIngridientByFilter(c *gin.Context) {
+func (controller *ItemController) GetIngridientsByFilter(c *gin.Context) {
 	var filters models.ItemModelFilters
 	filters.AlcoholMax = 1
 
@@ -139,7 +139,12 @@ func (controller *ItemController) AddIngridient(c *gin.Context) {
 	}
 
 	var item models.ItemModelCreate
-	json.Unmarshal(jsonData, &item)
+	err = json.Unmarshal(jsonData, &item)
+
+	if err != nil {
+		resources.ResponseJSON(c, http.StatusBadRequest, err.Error(), nil)
+		return
+	}
 
 	passedValidation, errorMessage := controller.ValidateNewIngridient(c, item)
 
@@ -185,7 +190,12 @@ func (controller *ItemController) ChangeIngridient(c *gin.Context) {
 	}
 
 	var item models.ItemModel
-	json.Unmarshal(jsonData, &item)
+	err = json.Unmarshal(jsonData, &item)
+
+	if err != nil {
+		resources.ResponseJSON(c, http.StatusBadRequest, err.Error(), nil)
+		return
+	}
 
 	ingridientOld, err := controller.Client.Ingridient.
 		Query().
@@ -237,7 +247,12 @@ func (controller *ItemController) DeleteIngridient(c *gin.Context) {
 	}
 
 	var itemIdObject models.ItemModelDelete
-	json.Unmarshal(jsonData, &itemIdObject)
+	err = json.Unmarshal(jsonData, &itemIdObject)
+
+	if err != nil {
+		resources.ResponseJSON(c, http.StatusBadRequest, err.Error(), nil)
+		return
+	}
 
 	ingridientOld, err := controller.Client.Ingridient.
 		Query().
