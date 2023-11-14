@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"context"
-	"errors"
 	"net/http"
 
 	"users_service/models"
@@ -17,45 +16,40 @@ type OrgController struct {
 	persister persistence.Persister
 }
 
-func (controller *OrgController) CreateOrg(ctx context.Context, req models.CreateOrgRequest) (resp models.CreateOrgResponse, err error) {
+func NewOrgController(persister persistence.Persister) *OrgController {
+	controller := new(OrgController)
+	controller.persister = persister
+	return controller
+}
+
+func (controller *OrgController) CreateOrg(ctx context.Context, req models.CreateOrgRequest) (resp models.CreateOrgResponse, serr models.ServiceError) {
 	res, err := controller.persister.SearchUserId(ctx, req.OwnerId)
 	if err != nil {
-		return
+		return resp, models.NewInternalError(err)
 	}
 	if !res {
-		err = errors.New("Owner does not exist")
-		return
+		return resp, models.NewServiceError(http.StatusNotFound, resources.OwnerNotExist)
 	}
 	org := models.Org{}
 	org.Id = uuid.New()
 	org.Name = req.Name
 	id, err := controller.persister.CreateOrg(ctx, org, req.OwnerId)
 	if err != nil {
-		return
+		return resp, models.NewInternalError(err)
 	}
-	resp = models.CreateOrgResponse{Id: id}
-	err = nil
-	return
+	return models.CreateOrgResponse{Id: id}, models.NoError()
 }
 
-func (controller *OrgController) GetAllOrgs(ctx context.Context) (resp models.GetOrgsResponse, err error) {
+func (controller *OrgController) GetAllOrgs(ctx context.Context) (resp models.GetOrgsResponse, serr models.ServiceError) {
 	orgs, err := controller.persister.GetAllOrgs(ctx)
 	if err != nil {
-		return
+		return resp, models.NewInternalError(err)
 	}
 	orgnames := []string{}
 	for _, org := range orgs {
 		orgnames = append(orgnames, org.Name)
 	}
-	resp = models.GetOrgsResponse{Orgnames: orgnames}
-	err = nil
-	return
-}
-
-func NewOrgController(persister persistence.Persister) *OrgController {
-	controller := new(OrgController)
-	controller.persister = persister
-	return controller
+	return models.GetOrgsResponse{Orgnames: orgnames}, models.NoError()
 }
 
 /*
@@ -78,9 +72,9 @@ func (controller *OrgController) ServeCreateOrg(writer http.ResponseWriter, req 
 		return
 	}
 	// Call controller
-	resp, err := controller.CreateOrg(req.Context(), request)
-	if err != nil {
-		serialization.SerializeError(writer, http.StatusBadRequest, err.Error())
+	resp, serr := controller.CreateOrg(req.Context(), request)
+	if !serr.IsOk() {
+		serialization.SerializeServiceError(writer, serr)
 		return
 	}
 	// Prepare response
@@ -94,9 +88,9 @@ func (controller *OrgController) ServeCreateOrg(writer http.ResponseWriter, req 
 //  @Router       /orgs [get]
 func (controller *OrgController) ServeAllOrgnames(writer http.ResponseWriter, req *http.Request) {
 	// Call controller
-	resp, err := controller.GetAllOrgs(req.Context())
-	if err != nil {
-		serialization.SerializeError(writer, http.StatusBadRequest, err.Error())
+	resp, serr := controller.GetAllOrgs(req.Context())
+	if !serr.IsOk() {
+		serialization.SerializeServiceError(writer, serr)
 		return
 	}
 	// Prepare response

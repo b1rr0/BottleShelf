@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"context"
-	"errors"
 	"net/http"
 
 	"users_service/models"
@@ -17,14 +16,19 @@ type UsersController struct {
 	persister persistence.Persister
 }
 
-func (controller *UsersController) CreateUser(ctx context.Context, req models.CreateUserRequest) (resp models.CreateUserResponse, err error) {
+func NewUsersController(persister persistence.Persister) *UsersController {
+	controller := new(UsersController)
+	controller.persister = persister
+	return controller
+}
+
+func (controller *UsersController) CreateUser(ctx context.Context, req models.CreateUserRequest) (resp models.CreateUserResponse, serr models.ServiceError) {
 	res, err := controller.persister.SearchUsername(ctx, req.Username)
 	if err != nil {
-		return
+		return resp, models.NewInternalError(err)
 	}
 	if res {
-		err = errors.New("This username is already taken")
-		return
+		return resp, models.NewServiceError(http.StatusBadRequest, resources.UsernameTaken)
 	}
 	user := models.User{}
 	user.Id = uuid.New()
@@ -32,45 +36,32 @@ func (controller *UsersController) CreateUser(ctx context.Context, req models.Cr
 	user.Password = req.Password // TODO: Encrypt
 	id, err := controller.persister.CreateUser(ctx, user)
 	if err != nil {
-		return
+		return resp, models.NewInternalError(err)
 	}
-	resp = models.CreateUserResponse{Id: id}
-	err = nil
-	return
+	return models.CreateUserResponse{Id: id}, models.NoError()
 }
 
-func (controller *UsersController) CheckUser(ctx context.Context, req models.CheckUserRequest) (resp models.CheckUserResponse, err error) {
+func (controller *UsersController) CheckUser(ctx context.Context, req models.CheckUserRequest) (resp models.CheckUserResponse, serr models.ServiceError) {
 	user := models.User{}
 	user.Username = req.Username
 	user.Password = req.Password // TODO: Encrypt
 	id, err := controller.persister.CheckUser(ctx, user)
 	if err != nil {
-		// TODO: Return right error string depending on error
-		return
+		return resp, models.NewInternalError(err)
 	}
-	resp = models.CheckUserResponse{Id: id}
-	err = nil
-	return
+	return models.CheckUserResponse{Id: id}, models.NoError()
 }
 
-func (controller *UsersController) GetAllUsers(ctx context.Context) (resp models.GetUsersResponse, err error) {
+func (controller *UsersController) GetAllUsers(ctx context.Context) (resp models.GetUsersResponse, serr models.ServiceError) {
 	users, err := controller.persister.GetAllUsers(ctx)
 	if err != nil {
-		return
+		return resp, models.NewInternalError(err)
 	}
 	usernames := []string{}
 	for _, user := range users {
 		usernames = append(usernames, user.Username)
 	}
-	resp = models.GetUsersResponse{Usernames: usernames}
-	err = nil
-	return
-}
-
-func NewUsersController(persister persistence.Persister) *UsersController {
-	controller := new(UsersController)
-	controller.persister = persister
-	return controller
+	return models.GetUsersResponse{Usernames: usernames}, models.NoError()
 }
 
 /*
@@ -93,9 +84,9 @@ func (controller *UsersController) ServeCreateUser(writer http.ResponseWriter, r
 		return
 	}
 	// Call controller
-	resp, err := controller.CreateUser(req.Context(), request)
-	if err != nil {
-		serialization.SerializeError(writer, http.StatusBadRequest, err.Error())
+	resp, serr := controller.CreateUser(req.Context(), request)
+	if !serr.IsOk() {
+		serialization.SerializeServiceError(writer, serr)
 		return
 	}
 	// Prepare response
@@ -119,9 +110,9 @@ func (controller *UsersController) ServeCheckUser(writer http.ResponseWriter, re
 		return
 	}
 	// Call controller
-	resp, err := controller.CheckUser(req.Context(), request)
-	if err != nil {
-		serialization.SerializeError(writer, http.StatusNotFound, resources.WrongUserData)
+	resp, serr := controller.CheckUser(req.Context(), request)
+	if !serr.IsOk() {
+		serialization.SerializeServiceError(writer, serr)
 		return
 	}
 	// Prepare response
@@ -136,9 +127,9 @@ func (controller *UsersController) ServeCheckUser(writer http.ResponseWriter, re
 //  @Router       /users [get]
 func (controller *UsersController) ServeAllUsernames(writer http.ResponseWriter, req *http.Request) {
 	// Call controller
-	resp, err := controller.GetAllUsers(req.Context())
-	if err != nil {
-		serialization.SerializeError(writer, http.StatusBadRequest, err.Error())
+	resp, serr := controller.GetAllUsers(req.Context())
+	if !serr.IsOk() {
+		serialization.SerializeServiceError(writer, serr)
 		return
 	}
 	// Prepare response

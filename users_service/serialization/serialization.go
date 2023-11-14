@@ -47,3 +47,11 @@ func SerializeError(writer http.ResponseWriter, status int, response string) {
 	}
 	writer.WriteHeader(status)
 }
+
+func SerializeServiceError(writer http.ResponseWriter, serr models.ServiceError) {
+	marshalled, err := json.Marshal(serr.Response())
+	if err == nil {
+		writer.Write(marshalled)
+	}
+	writer.WriteHeader(serr.Status)
+}
