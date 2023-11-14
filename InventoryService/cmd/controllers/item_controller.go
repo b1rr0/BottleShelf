@@ -78,6 +78,7 @@ func (controller *ItemController) GetIngridientsList(c *gin.Context) {
 // @Produce         application/json
 // @Param           item query models.ItemModelFilters true "Item to search for"
 // @Success         200
+// @Failure         400
 // @Router          /ingridient/search [get]
 func (controller *ItemController) GetIngridientByFilter(c *gin.Context) {
 	var filters models.ItemModelFilters
@@ -125,6 +126,7 @@ func (controller *ItemController) GetIngridientByFilter(c *gin.Context) {
 // @Produce           application/json
 // @Param             item body models.ItemModelCreate true "Item data"
 // @Success           201
+// @Failure           400
 // @Router            /ingridient [post]
 func (controller *ItemController) AddIngridient(c *gin.Context) {
 	jsonData, err := c.GetRawData()
@@ -169,6 +171,8 @@ func (controller *ItemController) AddIngridient(c *gin.Context) {
 // @Produce           application/json
 // @Param             item body models.ItemModel true "Item id and it's new data"
 // @Success           202
+// @Failure           400
+// @Failure           404
 // @Router            /ingridient [put]
 func (controller *ItemController) ChangeIngridient(c *gin.Context) {
 	jsonData, err := c.GetRawData()
@@ -219,6 +223,8 @@ func (controller *ItemController) ChangeIngridient(c *gin.Context) {
 // @Produce            application/json
 // @Param              itemId query models.ItemModelDelete true "item id"
 // @Success            202
+// @Failure            400
+// @Failure            404
 // @Router             /ingridient [delete]
 func (controller *ItemController) DeleteIngridient(c *gin.Context) {
 	jsonData, err := c.GetRawData()
