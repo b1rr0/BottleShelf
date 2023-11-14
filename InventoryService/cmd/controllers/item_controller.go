@@ -106,7 +106,7 @@ func (controller *ItemController) GetIngridientById(c *gin.Context) {
 		Only(c)
 
 	if err != nil {
-		if ingridient == nil {
+		if ent.IsNotFound(err) {
 			resources.ResponseJSON(c, http.StatusNotFound, resources.IngridientNotFound, nil)
 			return
 		}
@@ -248,7 +248,7 @@ func (controller *ItemController) ChangeIngridient(c *gin.Context) {
 		Only(c)
 
 	if err != nil {
-		if ingridientOld == nil {
+		if ent.IsNotFound(err) {
 			resources.ResponseJSON(c, http.StatusNotFound, resources.IngridientNotFound, nil)
 			return
 		}
@@ -299,13 +299,13 @@ func (controller *ItemController) DeleteIngridient(c *gin.Context) {
 		return
 	}
 
-	ingridientOld, err := controller.Client.Ingridient.
+	_, err = controller.Client.Ingridient.
 		Query().
 		Where(ingridient.ID(id)).
 		Only(c)
 
 	if err != nil {
-		if ingridientOld == nil {
+		if ent.IsNotFound(err) {
 			resources.ResponseJSON(c, http.StatusNotFound, resources.IngridientNotFound, nil)
 			return
 		}
