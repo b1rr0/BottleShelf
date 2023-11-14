@@ -17,7 +17,7 @@
                 "tags": [
                     "Inventory manipulation"
                 ],
-                "summary": "Adds new ingridient",
+                "summary": "Changes ingridient information",
                 "parameters": [
                     {
                         "description": "Item and it's data data",
@@ -75,7 +75,7 @@
                 "tags": [
                     "Inventory manipulation"
                 ],
-                "summary": "Adds new ingridient",
+                "summary": "Deletes ingridient",
                 "parameters": [
                     {
                         "type": "string",
@@ -102,7 +102,7 @@
                 "tags": [
                     "Inventory manipulation"
                 ],
-                "summary": "Gets list of all ingridients",
+                "summary": "Gets list ingridients by filter",
                 "parameters": [
                     {
                         "type": "number",

@@ -27,7 +27,7 @@ const docTemplate = `{
                 "tags": [
                     "Inventory manipulation"
                 ],
-                "summary": "Adds new ingridient",
+                "summary": "Changes ingridient information",
                 "parameters": [
                     {
                         "description": "Item and it's data data",
@@ -85,7 +85,7 @@ const docTemplate = `{
                 "tags": [
                     "Inventory manipulation"
                 ],
-                "summary": "Adds new ingridient",
+                "summary": "Deletes ingridient",
                 "parameters": [
                     {
                         "type": "string",
@@ -112,7 +112,7 @@ const docTemplate = `{
                 "tags": [
                     "Inventory manipulation"
                 ],
-                "summary": "Gets list of all ingridients",
+                "summary": "Gets list ingridients by filter",
                 "parameters": [
                     {
                         "type": "number",

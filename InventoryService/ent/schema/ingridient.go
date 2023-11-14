@@ -17,9 +17,9 @@ func (Ingridient) Fields() []ent.Field {
 	return []ent.Field{
 		field.UUID("id", uuid.UUID{}).Default(uuid.New).StorageKey("id"),
 		field.String("name").Unique().NotEmpty(),
-		field.Float("alcohol").Default(0),
+		field.Float("alcohol").Default(0).Max(1).Min(0),
 		field.Bool("isDry").Default(false),
-		field.Enum("measurmentUnit").Values("ml", "g", "pcs").Default("ml"),
+		field.Enum("measurmentUnit").Values("ml", "g", "pcs").Default("pcs"),
 	}
 }
 

@@ -41,7 +41,7 @@ paths:
       responses:
         "200":
           description: OK
-      summary: Adds new ingridient
+      summary: Deletes ingridient
       tags:
       - Inventory manipulation
     post:
@@ -79,7 +79,7 @@ paths:
       responses:
         "200":
           description: OK
-      summary: Adds new ingridient
+      summary: Changes ingridient information
       tags:
       - Inventory manipulation
   /ingridient/search:
@@ -105,7 +105,7 @@ paths:
       responses:
         "200":
           description: OK
-      summary: Gets list of all ingridients
+      summary: Gets list ingridients by filter
       tags:
       - Inventory manipulation
   /inventory:
