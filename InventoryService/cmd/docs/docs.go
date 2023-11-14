@@ -16,6 +16,43 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/ingridient": {
+            "get": {
+                "description": "Get ingridient with specified id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Inventory manipulation"
+                ],
+                "summary": "Gets ingridient",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ItemModel"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
             "put": {
                 "description": "Change ingridient in the database by id. All fields are required, otherwise default value will be used.",
                 "consumes": [
@@ -136,7 +173,27 @@ const docTemplate = `{
                 }
             }
         },
-        "/ingridient/search": {
+        "/inventory": {
+            "get": {
+                "description": "Get complete list of all ingridients availible for user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Inventory manipulation"
+                ],
+                "summary": "Gets list of all ingridients",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ItemModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/inventory/search": {
             "get": {
                 "description": "Get list of ingridients filtering by it's name and/or parameters",
                 "produces": [
@@ -179,26 +236,6 @@ const docTemplate = `{
                         "description": "Bad Request",
                         "schema": {
                             "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/inventory": {
-            "get": {
-                "description": "Get complete list of all ingridients availible for user",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Inventory manipulation"
-                ],
-                "summary": "Gets list of all ingridients",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.ItemModel"
                         }
                     }
                 }

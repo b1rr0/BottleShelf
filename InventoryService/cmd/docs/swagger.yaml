@@ -52,6 +52,30 @@ paths:
       summary: Deletes ingridient
       tags:
       - Inventory manipulation
+    get:
+      description: Get ingridient with specified id
+      parameters:
+      - in: query
+        name: id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ItemModel'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      summary: Gets ingridient
+      tags:
+      - Inventory manipulation
     post:
       consumes:
       - application/json
@@ -107,7 +131,20 @@ paths:
       summary: Changes ingridient information
       tags:
       - Inventory manipulation
-  /ingridient/search:
+  /inventory:
+    get:
+      description: Get complete list of all ingridients availible for user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ItemModel'
+      summary: Gets list of all ingridients
+      tags:
+      - Inventory manipulation
+  /inventory/search:
     get:
       description: Get list of ingridients filtering by it's name and/or parameters
       parameters:
@@ -135,19 +172,6 @@ paths:
           schema:
             type: string
       summary: Gets list ingridients by filter
-      tags:
-      - Inventory manipulation
-  /inventory:
-    get:
-      description: Get complete list of all ingridients availible for user
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.ItemModel'
-      summary: Gets list of all ingridients
       tags:
       - Inventory manipulation
   /ping:

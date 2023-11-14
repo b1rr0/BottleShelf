@@ -9,6 +9,7 @@ const (
 	AlreadyExists      = "Ingridient with this name already exists."
 	WrongMeasurement   = "Wrong measurement name, please use g, ml or pcs."
 	IngridientNotFound = "Ingridient not found."
+	IdNotFound         = "Id of ingridient not found."
 )
 
 type Strings struct {

@@ -52,10 +52,11 @@ func runHttpServer(itemController controllers.ItemController) {
 
 	r.GET(docs.SwaggerInfo.BasePath+"/ping", ping)
 	r.GET(docs.SwaggerInfo.BasePath+"/inventory", itemController.GetIngridientsList)
+	r.GET(docs.SwaggerInfo.BasePath+"/ingridient", itemController.GetIngridientById)
+	r.GET(docs.SwaggerInfo.BasePath+"/inventory/search", itemController.GetIngridientsByFilter)
 	r.POST(docs.SwaggerInfo.BasePath+"/ingridient", itemController.AddIngridient)
 	r.PUT(docs.SwaggerInfo.BasePath+"/ingridient", itemController.ChangeIngridient)
 	r.DELETE(docs.SwaggerInfo.BasePath+"/ingridient", itemController.DeleteIngridient)
-	r.GET(docs.SwaggerInfo.BasePath+"/ingridient/search", itemController.GetIngridientsByFilter)
 
 	// api doc http://localhost:8080/swagger/index.html
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

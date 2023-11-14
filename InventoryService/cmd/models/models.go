@@ -28,6 +28,6 @@ type ItemModelFilters struct {
 	IsDry      bool    `form:"isDry"`
 }
 
-type ItemModelDelete struct {
+type ItemModelId struct {
 	Id uuid.UUID `json:"id"`
 }

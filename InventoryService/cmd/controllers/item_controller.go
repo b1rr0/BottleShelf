@@ -9,6 +9,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type ItemController struct {
@@ -65,7 +66,7 @@ func (controller *ItemController) GetIngridientsList(c *gin.Context) {
 		All(c)
 
 	if err != nil {
-		resources.ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
+		resources.ResponseJSON(c, http.StatusServiceUnavailable, err.Error(), nil)
 		return
 	}
 
@@ -75,14 +76,58 @@ func (controller *ItemController) GetIngridientsList(c *gin.Context) {
 // @BasePath /api/v1
 
 // GetIngridientsList godoc
+// @Summary        Gets ingridient
+// @Description    Get ingridient with specified id
+// @Tags           Inventory manipulation
+// @Produce        application/json
+// @Param          Id query models.ItemModelId true "Id of item"
+// @Success        200 {object} models.ItemModel
+// @Failure        400 {string} string
+// @Failure        404 {string} string
+// @Router         /ingridient [get]
+func (controller *ItemController) GetIngridientById(c *gin.Context) {
+	idString, exists := c.GetQuery("id")
+
+	if !exists {
+		resources.ResponseJSON(c, http.StatusBadRequest, resources.IdNotFound, nil)
+		return
+	}
+
+	var id, err = uuid.Parse(idString)
+
+	if err != nil {
+		resources.ResponseJSON(c, http.StatusBadRequest, err.Error(), nil)
+		return
+	}
+
+	ingridient, err := controller.Client.Ingridient.
+		Query().
+		Where(ingridient.ID(id)).
+		Only(c)
+
+	if err != nil {
+		if ingridient == nil {
+			resources.ResponseJSON(c, http.StatusNotFound, resources.IngridientNotFound, nil)
+			return
+		}
+		resources.ResponseJSON(c, http.StatusServiceUnavailable, err.Error(), nil)
+		return
+	}
+
+	resources.ResponseJSON(c, http.StatusOK, "", ingridient)
+}
+
+// @BasePath /api/v1
+
+// GetIngridientsList godoc
 // @Summary         Gets list ingridients by filter
 // @Description     Get list of ingridients filtering by it's name and/or parameters
 // @Tags            Inventory manipulation
 // @Produce         application/json
-// @Param           item query models.ItemModelFilters true "Item to search for"
+// @Param           item query models.ItemModelFilters true "Item"
 // @Success         200 {object} models.ItemModel
 // @Failure         400 {string} string
-// @Router          /ingridient/search [get]
+// @Router          /inventory/search [get]
 func (controller *ItemController) GetIngridientsByFilter(c *gin.Context) {
 	var filters models.ItemModelFilters
 	filters.AlcoholMax = 1
@@ -112,7 +157,7 @@ func (controller *ItemController) GetIngridientsByFilter(c *gin.Context) {
 		All(c)
 
 	if err != nil {
-		resources.ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
+		resources.ResponseJSON(c, http.StatusServiceUnavailable, err.Error(), nil)
 		return
 	}
 
@@ -162,7 +207,7 @@ func (controller *ItemController) AddIngridient(c *gin.Context) {
 		Save(c)
 
 	if err != nil {
-		resources.ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
+		resources.ResponseJSON(c, http.StatusServiceUnavailable, err.Error(), nil)
 		return
 	}
 
@@ -207,7 +252,7 @@ func (controller *ItemController) ChangeIngridient(c *gin.Context) {
 			resources.ResponseJSON(c, http.StatusNotFound, resources.IngridientNotFound, nil)
 			return
 		}
-		resources.ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
+		resources.ResponseJSON(c, http.StatusServiceUnavailable, err.Error(), nil)
 		return
 	}
 
@@ -220,7 +265,7 @@ func (controller *ItemController) ChangeIngridient(c *gin.Context) {
 		Save(c)
 
 	if err != nil {
-		resources.ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
+		resources.ResponseJSON(c, http.StatusServiceUnavailable, err.Error(), nil)
 		return
 	}
 
@@ -234,20 +279,20 @@ func (controller *ItemController) ChangeIngridient(c *gin.Context) {
 // @Description        Delete ingridient from database by id
 // @Tags               Inventory manipulation
 // @Produce            application/json
-// @Param              itemId query models.ItemModelDelete true "item id"
+// @Param              itemId query models.ItemModelId true "item id"
 // @Success            202 {string} string
 // @Failure            400 {string} string
 // @Failure            404 {string} string
 // @Router             /ingridient [delete]
 func (controller *ItemController) DeleteIngridient(c *gin.Context) {
-	jsonData, err := c.GetRawData()
-	if err != nil {
-		resources.ResponseJSON(c, http.StatusBadRequest, err.Error(), nil)
+	idString, exists := c.GetQuery("id")
+
+	if !exists {
+		resources.ResponseJSON(c, http.StatusBadRequest, resources.IdNotFound, nil)
 		return
 	}
 
-	var itemIdObject models.ItemModelDelete
-	err = json.Unmarshal(jsonData, &itemIdObject)
+	var id, err = uuid.Parse(idString)
 
 	if err != nil {
 		resources.ResponseJSON(c, http.StatusBadRequest, err.Error(), nil)
@@ -256,7 +301,7 @@ func (controller *ItemController) DeleteIngridient(c *gin.Context) {
 
 	ingridientOld, err := controller.Client.Ingridient.
 		Query().
-		Where(ingridient.ID(itemIdObject.Id)).
+		Where(ingridient.ID(id)).
 		Only(c)
 
 	if err != nil {
@@ -264,16 +309,16 @@ func (controller *ItemController) DeleteIngridient(c *gin.Context) {
 			resources.ResponseJSON(c, http.StatusNotFound, resources.IngridientNotFound, nil)
 			return
 		}
-		resources.ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
+		resources.ResponseJSON(c, http.StatusServiceUnavailable, err.Error(), nil)
 		return
 	}
 
 	err = controller.Client.Ingridient.
-		DeleteOneID(itemIdObject.Id).
+		DeleteOneID(id).
 		Exec(c)
 
 	if err != nil {
-		resources.ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
+		resources.ResponseJSON(c, http.StatusServiceUnavailable, err.Error(), nil)
 		return
 	}
 
