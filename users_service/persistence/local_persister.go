@@ -47,7 +47,6 @@ func (persister *LocalPersister) CheckUser(ctx context.Context, checkUser models
 			return user.Id, nil
 		}
 	}
-	// TODO: Create a common way to return such common errors
 	return uuid.UUID{}, fmt.Errorf("Not found")
 }
 
