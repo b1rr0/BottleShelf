@@ -6,11 +6,21 @@ definitions:
       username:
         type: string
     type: object
+  models.CheckUserResponse:
+    properties:
+      id:
+        type: string
+    type: object
   models.CreateOrgRequest:
     properties:
       name:
         type: string
       owner:
+        type: string
+    type: object
+  models.CreateOrgResponse:
+    properties:
+      id:
         type: string
     type: object
   models.CreateUserRequest:
@@ -19,6 +29,25 @@ definitions:
         type: string
       username:
         type: string
+    type: object
+  models.ErrorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  models.GetOrgsResponse:
+    properties:
+      orgs:
+        items:
+          type: string
+        type: array
+    type: object
+  models.GetUsersResponse:
+    properties:
+      users:
+        items:
+          type: string
+        type: array
     type: object
 info:
   contact: {}
@@ -41,11 +70,13 @@ paths:
       responses:
         "200":
           description: OK
-        "400":
-          description: Bad request
           schema:
-            type: body
-      summary: Get all usernames
+            $ref: '#/definitions/models.GetOrgsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Get all organization names
   /orgs/create:
     post:
       consumes:
@@ -63,11 +94,11 @@ paths:
         "200":
           description: OK
           schema:
-            type: body
+            $ref: '#/definitions/models.CreateOrgResponse'
         "400":
-          description: Bad request
+          description: Bad Request
           schema:
-            type: body
+            $ref: '#/definitions/models.ErrorResponse'
       summary: Create a new organization
   /users:
     get:
@@ -77,10 +108,12 @@ paths:
       responses:
         "200":
           description: OK
-        "400":
-          description: Bad request
           schema:
-            type: body
+            $ref: '#/definitions/models.GetUsersResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
       summary: Get all usernames
   /users/check:
     post:
@@ -97,17 +130,17 @@ paths:
       - application/json
       responses:
         "200":
-          description: Successful log in
+          description: OK
           schema:
-            type: body
+            $ref: '#/definitions/models.CheckUserResponse'
         "400":
-          description: Bad request
+          description: Bad Request
           schema:
-            type: body
+            $ref: '#/definitions/models.ErrorResponse'
         "404":
-          description: User not found
+          description: Not Found
           schema:
-            type: body
+            $ref: '#/definitions/models.ErrorResponse'
       summary: Check user data (Log in)
   /users/create:
     post:
@@ -125,9 +158,11 @@ paths:
       responses:
         "200":
           description: OK
-        "400":
-          description: Bad request
           schema:
-            type: body
+            $ref: '#/definitions/models.CheckUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
       summary: Create a new user
 swagger: "2.0"

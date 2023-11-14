@@ -33,15 +33,18 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Get all usernames",
+                "summary": "Get all organization names",
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetOrgsResponse"
+                        }
                     },
                     "400": {
-                        "description": "Bad request",
+                        "description": "Bad Request",
                         "schema": {
-                            "type": "body"
+                            "$ref": "#/definitions/models.ErrorResponse"
                         }
                     }
                 }
@@ -71,13 +74,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "body"
+                            "$ref": "#/definitions/models.CreateOrgResponse"
                         }
                     },
                     "400": {
-                        "description": "Bad request",
+                        "description": "Bad Request",
                         "schema": {
-                            "type": "body"
+                            "$ref": "#/definitions/models.ErrorResponse"
                         }
                     }
                 }
@@ -92,12 +95,15 @@ const docTemplate = `{
                 "summary": "Get all usernames",
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetUsersResponse"
+                        }
                     },
                     "400": {
-                        "description": "Bad request",
+                        "description": "Bad Request",
                         "schema": {
-                            "type": "body"
+                            "$ref": "#/definitions/models.ErrorResponse"
                         }
                     }
                 }
@@ -125,21 +131,21 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successful log in",
+                        "description": "OK",
                         "schema": {
-                            "type": "body"
+                            "$ref": "#/definitions/models.CheckUserResponse"
                         }
                     },
                     "400": {
-                        "description": "Bad request",
+                        "description": "Bad Request",
                         "schema": {
-                            "type": "body"
+                            "$ref": "#/definitions/models.ErrorResponse"
                         }
                     },
                     "404": {
-                        "description": "User not found",
+                        "description": "Not Found",
                         "schema": {
-                            "type": "body"
+                            "$ref": "#/definitions/models.ErrorResponse"
                         }
                     }
                 }
@@ -167,12 +173,15 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.CheckUserResponse"
+                        }
                     },
                     "400": {
-                        "description": "Bad request",
+                        "description": "Bad Request",
                         "schema": {
-                            "type": "body"
+                            "$ref": "#/definitions/models.ErrorResponse"
                         }
                     }
                 }
@@ -191,6 +200,14 @@ const docTemplate = `{
                 }
             }
         },
+        "models.CheckUserResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
         "models.CreateOrgRequest": {
             "type": "object",
             "properties": {
@@ -198,6 +215,14 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "owner": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.CreateOrgResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
                     "type": "string"
                 }
             }
@@ -210,6 +235,36 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "models.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.GetOrgsResponse": {
+            "type": "object",
+            "properties": {
+                "orgs": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "models.GetUsersResponse": {
+            "type": "object",
+            "properties": {
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         }

@@ -17,6 +17,13 @@ type PostgrePersister struct {
 	client *ent.Client
 }
 
+func rollback(tx *ent.Tx, err error) error {
+	if rerr := tx.Rollback(); rerr != nil {
+		err = fmt.Errorf("%w: %v", err, rerr)
+	}
+	return err
+}
+
 func (persister *PostgrePersister) Init() (err error) {
 	client, err := ent.Open("postgres", "host=127.0.0.1 port=5432 user=root dbname=test password=pass sslmode=disable")
 	if err != nil {
@@ -113,22 +120,31 @@ func (persister *PostgrePersister) GetAllUsers(ctx context.Context) (users []mod
 }
 
 func (persister *PostgrePersister) CreateOrg(ctx context.Context, org models.Org, owner uuid.UUID) (id uuid.UUID, err error) {
-	// TODO: Create a transaction
-	dbOrg, err := persister.client.Org.
+	tx, err := persister.client.Tx(ctx)
+	dbOrg, err := tx.Org.
 		Create().
 		SetID(org.Id).
 		SetName(org.Name).
 		Save(ctx)
 	if err != nil {
+		err = rollback(tx, fmt.Errorf("Failed to create a org: %w", err))
 		return
 	}
-	// TODO: Create enum for roles
-	_, err = persister.client.Membership.
+	// TODO (Membership endpoints): Create enum for roles
+	_, err = tx.Membership.
 		Create().
 		SetRole("owner").
+		SetOrg(dbOrg).
+		SetMemberID(owner).
 		Save(ctx)
-	// TODO: Add edges
 	if err != nil {
+		err = rollback(tx, fmt.Errorf("Failed to create a membership: %w", err))
+		return
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		err = fmt.Errorf("Failed to create a org")
 		return
 	}
 	return dbOrg.ID, nil

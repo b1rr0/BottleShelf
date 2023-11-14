@@ -7,6 +7,7 @@ import (
 
 	"users_service/models"
 	"users_service/persistence"
+	"users_service/resources"
 	"users_service/serialization"
 
 	"github.com/google/uuid"
@@ -79,23 +80,22 @@ API ENDPOINTS
 //  @Summary      Create a new user
 //  @Accept       json
 //  @Produce      json
-//  @Param        user    body    models.CreateUserRequest    true    "Create user"
-//  @Failure      400     body    nil                                 "Bad request"
-//  @Success      200
+//  @Param        user    body        models.CreateUserRequest    true    "Create user"
+//  @Failure      400     {object}    models.ErrorResponse
+//  @Success      200     {object}    models.CheckUserResponse
 //  @Router       /users/create [post]
 func (controller *UsersController) ServeCreateUser(writer http.ResponseWriter, req *http.Request) {
 	// Parse request
 	request := models.CreateUserRequest{}
 	status := serialization.DeserializeRequest(req, &request)
 	if status != http.StatusOK {
-		writer.WriteHeader(status)
+		serialization.SerializeError(writer, status, resources.SerializationFailed)
 		return
 	}
 	// Call controller
 	resp, err := controller.CreateUser(req.Context(), request)
 	if err != nil {
-		writer.WriteHeader(http.StatusBadRequest)
-		writer.Write([]byte(err.Error()))
+		serialization.SerializeError(writer, http.StatusBadRequest, err.Error())
 		return
 	}
 	// Prepare response
@@ -105,24 +105,23 @@ func (controller *UsersController) ServeCreateUser(writer http.ResponseWriter, r
 //  @Summary      Check user data (Log in)
 //  @Accept       json
 //  @Produce      json
-//  @Param        user    body    models.CheckUserRequest    true    "Log in"
-//  @Failure      400     body    nil                                "Bad request"
-//  @Failure      404     body    nil                                "User not found"
-//  @Success      200     body    models.CheckUserResponse           "Successful log in"
+//  @Param        user    body        models.CheckUserRequest    true    "Log in"
+//  @Failure      400     {object}    models.ErrorResponse
+//  @Failure      404     {object}    models.ErrorResponse
+//  @Success      200     {object}    models.CheckUserResponse
 //  @Router       /users/check [post]
 func (controller *UsersController) ServeCheckUser(writer http.ResponseWriter, req *http.Request) {
 	// Parse request
 	request := models.CheckUserRequest{}
 	status := serialization.DeserializeRequest(req, &request)
 	if status != http.StatusOK {
-		writer.WriteHeader(status)
+		serialization.SerializeError(writer, status, resources.SerializationFailed)
 		return
 	}
 	// Call controller
 	resp, err := controller.CheckUser(req.Context(), request)
 	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		writer.Write([]byte(err.Error()))
+		serialization.SerializeError(writer, http.StatusNotFound, resources.WrongUserData)
 		return
 	}
 	// Prepare response
@@ -132,22 +131,14 @@ func (controller *UsersController) ServeCheckUser(writer http.ResponseWriter, re
 //  @Summary      Get all usernames
 //  @Description  Debug-only endpoint, should not be called from api gateway
 //  @Produce      json
-//  @Failure      400     body    nil                                "Bad request"
-//  @Success      200
+//  @Failure      400     {object}    models.ErrorResponse
+//  @Success      200     {object}    models.GetUsersResponse
 //  @Router       /users [get]
 func (controller *UsersController) ServeAllUsernames(writer http.ResponseWriter, req *http.Request) {
-	// Parse request
-	request := models.CheckUserRequest{}
-	status := serialization.DeserializeRequest(req, &request)
-	if status != http.StatusOK {
-		writer.WriteHeader(status)
-		return
-	}
 	// Call controller
 	resp, err := controller.GetAllUsers(req.Context())
 	if err != nil {
-		writer.WriteHeader(http.StatusBadRequest)
-		writer.Write([]byte(err.Error()))
+		serialization.SerializeError(writer, http.StatusBadRequest, err.Error())
 		return
 	}
 	// Prepare response

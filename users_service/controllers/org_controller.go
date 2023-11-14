@@ -7,6 +7,7 @@ import (
 
 	"users_service/models"
 	"users_service/persistence"
+	"users_service/resources"
 	"users_service/serialization"
 
 	"github.com/google/uuid"
@@ -21,7 +22,7 @@ func (controller *OrgController) CreateOrg(ctx context.Context, req models.Creat
 	if err != nil {
 		return
 	}
-	if res {
+	if !res {
 		err = errors.New("Owner does not exist")
 		return
 	}
@@ -64,47 +65,38 @@ API ENDPOINTS
 //  @Summary      Create a new organization
 //  @Accept       json
 //  @Produce      json
-//  @Param        user    body    models.CreateOrgRequest    true     "Create user"
-//  @Failure      400     body    nil                                 "Bad request"
-//  @Success      200     body    models.CreateOrgResponse            ""
+//  @Param        user    body        models.CreateOrgRequest    true     "Create user"
+//  @Failure      400     {object}    models.ErrorResponse
+//  @Success      200     {object}    models.CreateOrgResponse
 //  @Router       /orgs/create [post]
 func (controller *OrgController) ServeCreateOrg(writer http.ResponseWriter, req *http.Request) {
 	// Parse request
 	request := models.CreateOrgRequest{}
 	status := serialization.DeserializeRequest(req, &request)
 	if status != http.StatusOK {
-		writer.WriteHeader(status)
+		serialization.SerializeError(writer, status, resources.SerializationFailed)
 		return
 	}
 	// Call controller
 	resp, err := controller.CreateOrg(req.Context(), request)
 	if err != nil {
-		writer.WriteHeader(http.StatusBadRequest)
-		writer.Write([]byte(err.Error()))
+		serialization.SerializeError(writer, http.StatusBadRequest, err.Error())
 		return
 	}
 	// Prepare response
 	serialization.SerializeResponse(writer, resp)
 }
 
-//  @Summary      Get all usernames
+//  @Summary      Get all organization names
 //  @Produce      json
-//  @Failure      400     body    nil                                "Bad request"
-//  @Success      200
+//  @Failure      400     {object}    models.ErrorResponse
+//  @Success      200     {object}    models.GetOrgsResponse
 //  @Router       /orgs [get]
 func (controller *OrgController) ServeAllOrgnames(writer http.ResponseWriter, req *http.Request) {
-	// Parse request
-	request := models.CheckUserRequest{}
-	status := serialization.DeserializeRequest(req, &request)
-	if status != http.StatusOK {
-		writer.WriteHeader(status)
-		return
-	}
 	// Call controller
 	resp, err := controller.GetAllOrgs(req.Context())
 	if err != nil {
-		writer.WriteHeader(http.StatusBadRequest)
-		writer.Write([]byte(err.Error()))
+		serialization.SerializeError(writer, http.StatusBadRequest, err.Error())
 		return
 	}
 	// Prepare response
