@@ -27,23 +27,55 @@ func ResponseJSON(c *gin.Context, httpCode int, msg string, data interface{}) {
 	})
 }
 
+func (controller *ItemController) ValidateNewIngridient(c *gin.Context, item models.ItemModelCreate) (passed bool, errorMessage string) {
+	isAlreadyExists, err := controller.Client.Ingridient.
+		Query().
+		Where(ingridient.Name(item.Name)).
+		Exist(c)
+
+	errorMessage = ""
+
+	if err != nil {
+		ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
+		passed = false
+		errorMessage += err.Error()
+		return
+	}
+
+	if isAlreadyExists {
+		errorMessage += resources.AlreadyExists + " "
+		passed = false
+	}
+
+	if item.Alcohol < 0 || item.Alcohol > 1 {
+		errorMessage += resources.InadequateAlcohol + " "
+		passed = false
+	}
+
+	if !(item.MeasurmentUnit == "pcs" || item.MeasurmentUnit == "g" || item.MeasurmentUnit == "ml" || item.MeasurmentUnit == "") {
+		errorMessage += resources.WrongMeasurement + " "
+		passed = false
+	}
+	return
+}
+
 // @BasePath /api/v1
 
 // GetIngridientsList godoc
-// @Summary 	Gets list of all ingridients
+// @Summary		Gets list of all ingridients
 // @Description Get complete list of all ingridients availible for user
-// @Tags 		Inventory manipulation
-// @Accept 		json
-// @Produce 	application/json
+// @Tags		Inventory manipulation
+// @Accept		json
+// @Produce		application/json
 // @Success		200
-// @Router 		/inventory [get]
+// @Router		/inventory [get]
 func (controller *ItemController) GetIngridientsList(c *gin.Context) {
 	ingridients, err := controller.Client.Ingridient.
 		Query().
 		All(c)
 
 	if err != nil {
-		ResponseJSON(c, http.StatusBadRequest, err.Error(), nil)
+		ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
 		return
 	}
 
@@ -72,6 +104,11 @@ func (controller *ItemController) GetIngridientByFilter(c *gin.Context) {
 		return
 	}
 
+	if filters.AlcoholMin < 0 || filters.AlcoholMax > 1 {
+		ResponseJSON(c, http.StatusBadRequest, resources.InadequateAlcohol, nil)
+		return
+	}
+
 	ingridients, err := controller.Client.Ingridient.
 		Query().
 		Where(
@@ -85,7 +122,7 @@ func (controller *ItemController) GetIngridientByFilter(c *gin.Context) {
 		All(c)
 
 	if err != nil {
-		ResponseJSON(c, http.StatusBadRequest, err.Error(), nil)
+		ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
 		return
 	}
 
@@ -113,6 +150,13 @@ func (controller *ItemController) AddIngridient(c *gin.Context) {
 	var item models.ItemModelCreate
 	json.Unmarshal(jsonData, &item)
 
+	passedValidation, errorMessage := controller.ValidateNewIngridient(c, item)
+
+	if !passedValidation {
+		ResponseJSON(c, http.StatusBadRequest, errorMessage, nil)
+		return
+	}
+
 	ingridient, err := controller.Client.Ingridient.
 		Create().
 		SetName(item.Name).
@@ -122,11 +166,11 @@ func (controller *ItemController) AddIngridient(c *gin.Context) {
 		Save(c)
 
 	if err != nil {
-		ResponseJSON(c, http.StatusBadRequest, err.Error(), nil)
+		ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
 		return
 	}
 
-	ResponseJSON(c, http.StatusOK, resources.IngridientAdded, ingridient)
+	ResponseJSON(c, http.StatusCreated, resources.IngridientAdded, ingridient)
 }
 
 // @BasePath /api/v1
@@ -156,7 +200,11 @@ func (controller *ItemController) ChangeIngridient(c *gin.Context) {
 		Only(c)
 
 	if err != nil {
-		ResponseJSON(c, http.StatusBadRequest, err.Error(), nil)
+		if ingridientOld == nil {
+			ResponseJSON(c, http.StatusNotFound, err.Error(), nil)
+			return
+		}
+		ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
 		return
 	}
 
@@ -169,11 +217,11 @@ func (controller *ItemController) ChangeIngridient(c *gin.Context) {
 		Save(c)
 
 	if err != nil {
-		ResponseJSON(c, http.StatusBadRequest, err.Error(), nil)
+		ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
 		return
 	}
 
-	ResponseJSON(c, http.StatusOK, resources.IngridientUpdated, ingridient)
+	ResponseJSON(c, http.StatusAccepted, resources.IngridientUpdated, ingridient)
 }
 
 // @BasePath /api/v1
@@ -197,9 +245,28 @@ func (controller *ItemController) DeleteIngridient(c *gin.Context) {
 	var itemIdObject models.ItemModelDelete
 	json.Unmarshal(jsonData, &itemIdObject)
 
-	controller.Client.Ingridient.
+	ingridientOld, err := controller.Client.Ingridient.
+		Query().
+		Where(ingridient.ID(itemIdObject.Id)).
+		Only(c)
+
+	if err != nil {
+		if ingridientOld == nil {
+			ResponseJSON(c, http.StatusNotFound, err.Error(), nil)
+			return
+		}
+		ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
+		return
+	}
+
+	err = controller.Client.Ingridient.
 		DeleteOneID(itemIdObject.Id).
 		Exec(c)
 
-	ResponseJSON(c, http.StatusOK, resources.IngridientDeleted, nil)
+	if err != nil {
+		ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
+		return
+	}
+
+	ResponseJSON(c, http.StatusAccepted, resources.IngridientDeleted, nil)
 }
