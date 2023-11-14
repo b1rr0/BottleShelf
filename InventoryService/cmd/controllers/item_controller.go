@@ -62,13 +62,12 @@ func (controller *ItemController) ValidateNewIngridient(c *gin.Context, item mod
 // @BasePath /api/v1
 
 // GetIngridientsList godoc
-// @Summary		Gets list of all ingridients
-// @Description Get complete list of all ingridients availible for user
-// @Tags		Inventory manipulation
-// @Accept		json
-// @Produce		application/json
-// @Success		200
-// @Router		/inventory [get]
+// @Summary        Gets list of all ingridients
+// @Description    Get complete list of all ingridients availible for user
+// @Tags           Inventory manipulation
+// @Produce        application/json
+// @Success        200
+// @Router         /inventory [get]
 func (controller *ItemController) GetIngridientsList(c *gin.Context) {
 	ingridients, err := controller.Client.Ingridient.
 		Query().
@@ -85,14 +84,13 @@ func (controller *ItemController) GetIngridientsList(c *gin.Context) {
 // @BasePath /api/v1
 
 // GetIngridientsList godoc
-// @Summary 	Gets list ingridients by filter
-// @Description Get complete list of all ingridients availible for user
-// @Tags 		Inventory manipulation
-// @Accept 		json
-// @Produce 	application/json
-// @Param 		item query models.ItemModelFilters true "Item to search for"
-// @Success		200
-// @Router 		/ingridient/search [get]
+// @Summary         Gets list ingridients by filter
+// @Description     Get list of ingridients filtering by it's name and/or parameters
+// @Tags            Inventory manipulation
+// @Produce         application/json
+// @Param           item query models.ItemModelFilters true "Item to search for"
+// @Success         200
+// @Router          /ingridient/search [get]
 func (controller *ItemController) GetIngridientByFilter(c *gin.Context) {
 	var filters models.ItemModelFilters
 	filters.AlcoholMax = 1
@@ -132,14 +130,14 @@ func (controller *ItemController) GetIngridientByFilter(c *gin.Context) {
 // @BasePath /api/v1
 
 // AddIngridient godoc
-// @Summary 	Adds new ingridient
-// @Description Add new ingridient to database
-// @Tags 		Inventory manipulation
-// @Accept 		json
-// @Produce 	application/json
-// @Param 		item body models.ItemModelCreate true "Item data"
-// @Success 	200
-// @Router  	/ingridient [post]
+// @Summary           Adds new ingridient
+// @Description       Add new ingridient to database
+// @Tags              Inventory manipulation
+// @Accept            json
+// @Produce           application/json
+// @Param             item body models.ItemModelCreate true "Item data"
+// @Success           201
+// @Router            /ingridient [post]
 func (controller *ItemController) AddIngridient(c *gin.Context) {
 	jsonData, err := c.GetRawData()
 	if err != nil {
@@ -176,14 +174,14 @@ func (controller *ItemController) AddIngridient(c *gin.Context) {
 // @BasePath /api/v1
 
 // AddIngridient godoc
-// @Summary 	Changes ingridient information
-// @Description Add new ingridient to database
-// @Tags 		Inventory manipulation
-// @Accept 		json
-// @Produce 	application/json
-// @Param 		item body models.ItemModel true "Item and it's data data"
-// @Success 	200
-// @Router  	/ingridient [put]
+// @Summary           Changes ingridient information
+// @Description       Change ingridient in the database by id
+// @Tags              Inventory manipulation
+// @Accept            json
+// @Produce           application/json
+// @Param             item body models.ItemModel true "Item id and it's new data"
+// @Success           202
+// @Router            /ingridient [put]
 func (controller *ItemController) ChangeIngridient(c *gin.Context) {
 	jsonData, err := c.GetRawData()
 	if err != nil {
@@ -227,14 +225,13 @@ func (controller *ItemController) ChangeIngridient(c *gin.Context) {
 // @BasePath /api/v1
 
 // AddIngridient godoc
-// @Summary 	Deletes ingridient
-// @Description Add new ingridient to database
-// @Tags 		Inventory manipulation
-// @Accept 		json
-// @Produce 	application/json
-// @Param 		itemId query models.ItemModelDelete true "itemId"
-// @Success 	200
-// @Router  	/ingridient [delete]
+// @Summary            Deletes ingridient
+// @Description        Delete ingridient from database by id
+// @Tags               Inventory manipulation
+// @Produce            application/json
+// @Param              itemId query models.ItemModelDelete true "item id"
+// @Success            202
+// @Router             /ingridient [delete]
 func (controller *ItemController) DeleteIngridient(c *gin.Context) {
 	jsonData, err := c.GetRawData()
 	if err != nil {

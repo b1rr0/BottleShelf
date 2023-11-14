@@ -29,9 +29,7 @@ info:
 paths:
   /ingridient:
     delete:
-      consumes:
-      - application/json
-      description: Add new ingridient to database
+      description: Delete ingridient from database by id
       parameters:
       - in: query
         name: id
@@ -39,8 +37,8 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "202":
+          description: Accepted
       summary: Deletes ingridient
       tags:
       - Inventory manipulation
@@ -58,17 +56,17 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Created
       summary: Adds new ingridient
       tags:
       - Inventory manipulation
     put:
       consumes:
       - application/json
-      description: Add new ingridient to database
+      description: Change ingridient in the database by id
       parameters:
-      - description: Item and it's data data
+      - description: Item id and it's new data
         in: body
         name: item
         required: true
@@ -77,16 +75,14 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "202":
+          description: Accepted
       summary: Changes ingridient information
       tags:
       - Inventory manipulation
   /ingridient/search:
     get:
-      consumes:
-      - application/json
-      description: Get complete list of all ingridients availible for user
+      description: Get list of ingridients filtering by it's name and/or parameters
       parameters:
       - in: query
         name: alcoholmax
@@ -110,8 +106,6 @@ paths:
       - Inventory manipulation
   /inventory:
     get:
-      consumes:
-      - application/json
       description: Get complete list of all ingridients availible for user
       produces:
       - application/json

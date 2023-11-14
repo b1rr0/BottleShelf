@@ -17,7 +17,7 @@ const docTemplate = `{
     "paths": {
         "/ingridient": {
             "put": {
-                "description": "Add new ingridient to database",
+                "description": "Change ingridient in the database by id",
                 "consumes": [
                     "application/json"
                 ],
@@ -30,7 +30,7 @@ const docTemplate = `{
                 "summary": "Changes ingridient information",
                 "parameters": [
                     {
-                        "description": "Item and it's data data",
+                        "description": "Item id and it's new data",
                         "name": "item",
                         "in": "body",
                         "required": true,
@@ -40,8 +40,8 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK"
+                    "202": {
+                        "description": "Accepted"
                     }
                 }
             },
@@ -69,16 +69,13 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK"
+                    "201": {
+                        "description": "Created"
                     }
                 }
             },
             "delete": {
-                "description": "Add new ingridient to database",
-                "consumes": [
-                    "application/json"
-                ],
+                "description": "Delete ingridient from database by id",
                 "produces": [
                     "application/json"
                 ],
@@ -94,18 +91,15 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK"
+                    "202": {
+                        "description": "Accepted"
                     }
                 }
             }
         },
         "/ingridient/search": {
             "get": {
-                "description": "Get complete list of all ingridients availible for user",
-                "consumes": [
-                    "application/json"
-                ],
+                "description": "Get list of ingridients filtering by it's name and/or parameters",
                 "produces": [
                     "application/json"
                 ],
@@ -145,9 +139,6 @@ const docTemplate = `{
         "/inventory": {
             "get": {
                 "description": "Get complete list of all ingridients availible for user",
-                "consumes": [
-                    "application/json"
-                ],
                 "produces": [
                     "application/json"
                 ],
