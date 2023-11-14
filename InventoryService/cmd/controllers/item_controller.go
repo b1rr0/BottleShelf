@@ -15,18 +15,6 @@ type ItemController struct {
 	Client *ent.Client
 }
 
-type Response struct {
-	Msg  string      `json:"message"`
-	Data interface{} `json:"data"`
-}
-
-func ResponseJSON(c *gin.Context, httpCode int, msg string, data interface{}) {
-	c.JSON(httpCode, Response{
-		Msg:  msg,
-		Data: data,
-	})
-}
-
 func (controller *ItemController) ValidateNewIngridient(c *gin.Context, item models.ItemModelCreate) (passed bool, errorMessage string) {
 	isAlreadyExists, err := controller.Client.Ingridient.
 		Query().
@@ -36,7 +24,7 @@ func (controller *ItemController) ValidateNewIngridient(c *gin.Context, item mod
 	errorMessage = ""
 
 	if err != nil {
-		ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
+		resources.ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
 		passed = false
 		errorMessage += err.Error()
 		return
@@ -74,11 +62,11 @@ func (controller *ItemController) GetIngridientsList(c *gin.Context) {
 		All(c)
 
 	if err != nil {
-		ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
+		resources.ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
 		return
 	}
 
-	ResponseJSON(c, http.StatusOK, "", ingridients)
+	resources.ResponseJSON(c, http.StatusOK, "", ingridients)
 }
 
 // @BasePath /api/v1
@@ -98,12 +86,12 @@ func (controller *ItemController) GetIngridientByFilter(c *gin.Context) {
 	err := c.BindQuery(&filters)
 
 	if err != nil {
-		ResponseJSON(c, http.StatusBadRequest, err.Error(), nil)
+		resources.ResponseJSON(c, http.StatusBadRequest, err.Error(), nil)
 		return
 	}
 
 	if filters.AlcoholMin < 0 || filters.AlcoholMax > 1 {
-		ResponseJSON(c, http.StatusBadRequest, resources.InadequateAlcohol, nil)
+		resources.ResponseJSON(c, http.StatusBadRequest, resources.InadequateAlcohol, nil)
 		return
 	}
 
@@ -120,11 +108,11 @@ func (controller *ItemController) GetIngridientByFilter(c *gin.Context) {
 		All(c)
 
 	if err != nil {
-		ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
+		resources.ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
 		return
 	}
 
-	ResponseJSON(c, http.StatusOK, "", ingridients)
+	resources.ResponseJSON(c, http.StatusOK, "", ingridients)
 }
 
 // @BasePath /api/v1
@@ -141,7 +129,7 @@ func (controller *ItemController) GetIngridientByFilter(c *gin.Context) {
 func (controller *ItemController) AddIngridient(c *gin.Context) {
 	jsonData, err := c.GetRawData()
 	if err != nil {
-		ResponseJSON(c, http.StatusBadRequest, err.Error(), nil)
+		resources.ResponseJSON(c, http.StatusBadRequest, err.Error(), nil)
 		return
 	}
 
@@ -151,7 +139,7 @@ func (controller *ItemController) AddIngridient(c *gin.Context) {
 	passedValidation, errorMessage := controller.ValidateNewIngridient(c, item)
 
 	if !passedValidation {
-		ResponseJSON(c, http.StatusBadRequest, errorMessage, nil)
+		resources.ResponseJSON(c, http.StatusBadRequest, errorMessage, nil)
 		return
 	}
 
@@ -164,11 +152,11 @@ func (controller *ItemController) AddIngridient(c *gin.Context) {
 		Save(c)
 
 	if err != nil {
-		ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
+		resources.ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
 		return
 	}
 
-	ResponseJSON(c, http.StatusCreated, resources.IngridientAdded, ingridient)
+	resources.ResponseJSON(c, http.StatusCreated, resources.IngridientAdded, ingridient)
 }
 
 // @BasePath /api/v1
@@ -185,7 +173,7 @@ func (controller *ItemController) AddIngridient(c *gin.Context) {
 func (controller *ItemController) ChangeIngridient(c *gin.Context) {
 	jsonData, err := c.GetRawData()
 	if err != nil {
-		ResponseJSON(c, http.StatusBadRequest, err.Error(), nil)
+		resources.ResponseJSON(c, http.StatusBadRequest, err.Error(), nil)
 		return
 	}
 
@@ -199,10 +187,10 @@ func (controller *ItemController) ChangeIngridient(c *gin.Context) {
 
 	if err != nil {
 		if ingridientOld == nil {
-			ResponseJSON(c, http.StatusNotFound, err.Error(), nil)
+			resources.ResponseJSON(c, http.StatusNotFound, err.Error(), nil)
 			return
 		}
-		ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
+		resources.ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
 		return
 	}
 
@@ -215,11 +203,11 @@ func (controller *ItemController) ChangeIngridient(c *gin.Context) {
 		Save(c)
 
 	if err != nil {
-		ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
+		resources.ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
 		return
 	}
 
-	ResponseJSON(c, http.StatusAccepted, resources.IngridientUpdated, ingridient)
+	resources.ResponseJSON(c, http.StatusAccepted, resources.IngridientUpdated, ingridient)
 }
 
 // @BasePath /api/v1
@@ -235,7 +223,7 @@ func (controller *ItemController) ChangeIngridient(c *gin.Context) {
 func (controller *ItemController) DeleteIngridient(c *gin.Context) {
 	jsonData, err := c.GetRawData()
 	if err != nil {
-		ResponseJSON(c, http.StatusBadRequest, err.Error(), nil)
+		resources.ResponseJSON(c, http.StatusBadRequest, err.Error(), nil)
 		return
 	}
 
@@ -249,10 +237,10 @@ func (controller *ItemController) DeleteIngridient(c *gin.Context) {
 
 	if err != nil {
 		if ingridientOld == nil {
-			ResponseJSON(c, http.StatusNotFound, err.Error(), nil)
+			resources.ResponseJSON(c, http.StatusNotFound, err.Error(), nil)
 			return
 		}
-		ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
+		resources.ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
 		return
 	}
 
@@ -261,9 +249,9 @@ func (controller *ItemController) DeleteIngridient(c *gin.Context) {
 		Exec(c)
 
 	if err != nil {
-		ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
+		resources.ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
 		return
 	}
 
-	ResponseJSON(c, http.StatusAccepted, resources.IngridientDeleted, nil)
+	resources.ResponseJSON(c, http.StatusAccepted, resources.IngridientDeleted, nil)
 }
