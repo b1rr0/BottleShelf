@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"inventoryService/m/v2/cmd/models"
 	"inventoryService/m/v2/cmd/resources"
 	"inventoryService/m/v2/ent"
@@ -16,36 +17,28 @@ type ItemController struct {
 	Client *ent.Client
 }
 
-func (controller *ItemController) ValidateNewIngridient(c *gin.Context, item models.ItemModelCreate) (passed bool, errorMessage string) {
-	isAlreadyExists, err := controller.Client.Ingridient.
+func (controller *ItemController) ValidateNewIngridient(c *gin.Context, item models.ItemModelCreate) (exists bool, valid bool, errorMessage []string) {
+	exists, err := controller.Client.Ingridient.
 		Query().
 		Where(ingridient.Name(item.Name)).
 		Exist(c)
-	passed = true
-	errorMessage = ""
+
+	valid = true
 
 	if err != nil {
-		resources.ResponseJSON(c, http.StatusInternalServerError, err.Error(), nil)
-		passed = false
-		errorMessage += err.Error()
-		return
-	}
-
-	if isAlreadyExists {
-		errorMessage += resources.AlreadyExists
-		passed = false
+		resources.ResponseJSON(c, http.StatusServiceUnavailable, err.Error(), nil)
 		return
 	}
 
 	if item.Alcohol < 0 || item.Alcohol > 1 {
-		errorMessage += resources.InadequateAlcohol
-		passed = false
+		errorMessage = append(errorMessage, "Alcohol")
+		valid = false
 		return
 	}
 
 	if !(item.MeasurmentUnit == "pcs" || item.MeasurmentUnit == "g" || item.MeasurmentUnit == "ml" || item.MeasurmentUnit == "") {
-		errorMessage += resources.WrongMeasurement
-		passed = false
+		errorMessage = append(errorMessage, "MeasurmentUnit")
+		valid = false
 		return
 	}
 	return
@@ -139,7 +132,7 @@ func (controller *ItemController) GetIngridientsByFilter(c *gin.Context) {
 		return
 	}
 
-	if filters.AlcoholMin < 0 || filters.AlcoholMax > 1 {
+	if filters.AlcoholMin < 0 || filters.AlcoholMax > 1 || filters.AlcoholMax < 0 || filters.AlcoholMin > 1 {
 		resources.ResponseJSON(c, http.StatusBadRequest, resources.InadequateAlcohol, nil)
 		return
 	}
@@ -191,10 +184,15 @@ func (controller *ItemController) AddIngridient(c *gin.Context) {
 		return
 	}
 
-	passedValidation, errorMessage := controller.ValidateNewIngridient(c, item)
+	exists, valid, errorMessage := controller.ValidateNewIngridient(c, item)
 
-	if !passedValidation {
-		resources.ResponseJSON(c, http.StatusBadRequest, errorMessage, nil)
+	if exists {
+		resources.ResponseJSON(c, http.StatusBadRequest, resources.AlreadyExists, nil)
+		return
+	}
+
+	if !valid {
+		resources.ResponseJSON(c, http.StatusBadRequest, fmt.Sprintf(resources.WrongParameter, errorMessage[0]), nil)
 		return
 	}
 

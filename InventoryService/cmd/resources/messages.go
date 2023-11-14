@@ -7,7 +7,7 @@ const (
 	IngridientAdded    = "Ingridient successfully added."
 	InadequateAlcohol  = "Alcohol amount should be from 0 to 100 %."
 	AlreadyExists      = "Ingridient with this name already exists."
-	WrongMeasurement   = "Wrong measurement name, please use g, ml or pcs."
+	WrongParameter     = "Parameter cannot be parsed: %s."
 	IngridientNotFound = "Ingridient not found."
 	IdNotFound         = "Id of ingridient not found."
 )
