@@ -27,6 +27,7 @@ func ResponseJSON(c *gin.Context, httpCode int, msg string, data interface{}) {
 		c.JSON(httpCode, ErrorResponse{
 			ErrMsg: msg,
 		})
+		return
 	}
 	c.JSON(httpCode, DataResponse{
 		Data: data,
