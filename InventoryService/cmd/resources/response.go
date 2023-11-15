@@ -7,7 +7,7 @@ type DataResponse struct {
 }
 
 type ErrorResponse struct {
-	ErrMsg string `json:"errorMessage"`
+	ErrMsg string `json:"message"`
 }
 
 type Response struct {
