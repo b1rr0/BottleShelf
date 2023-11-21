@@ -5,10 +5,8 @@ go 1.21.1
 require (
 	entgo.io/ent v0.12.4
 	github.com/gin-gonic/gin v1.9.1
-	github.com/go-playground/assert/v2 v2.2.0
 	github.com/google/uuid v1.4.0
 	github.com/lib/pq v1.10.9
-	github.com/stretchr/testify v1.8.4
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0
 	github.com/swaggo/swag v1.16.2

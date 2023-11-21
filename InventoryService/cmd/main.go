@@ -50,7 +50,10 @@ func runHttpServer(itemController controllers.ItemController) {
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 
+	// ping endpoint
 	r.GET(docs.SwaggerInfo.BasePath+"/ping", ping)
+
+	// itemController
 	r.GET(docs.SwaggerInfo.BasePath+"/inventory", itemController.GetIngridientsList)
 	r.GET(docs.SwaggerInfo.BasePath+"/ingridient", itemController.GetIngridientById)
 	r.GET(docs.SwaggerInfo.BasePath+"/inventory/search", itemController.GetIngridientsByFilter)
