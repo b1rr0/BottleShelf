@@ -1,0 +1,192 @@
+basePath: /api/v1
+definitions:
+  models.ItemModel:
+    properties:
+      alcohol:
+        type: number
+      id:
+        type: string
+      isDry:
+        type: boolean
+      measurmentUnit:
+        type: string
+      name:
+        type: string
+    type: object
+  models.ItemModelCreate:
+    properties:
+      alcohol:
+        type: number
+      isDry:
+        type: boolean
+      measurmentUnit:
+        type: string
+      name:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /ingridient:
+    delete:
+      description: Delete ingridient from database by id
+      parameters:
+      - in: query
+        name: id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      summary: Deletes ingridient
+      tags:
+      - Inventory manipulation
+    get:
+      description: Get ingridient with specified id
+      parameters:
+      - in: query
+        name: id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ItemModel'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      summary: Gets ingridient
+      tags:
+      - Inventory manipulation
+    post:
+      consumes:
+      - application/json
+      description: Add new ingridient to database
+      parameters:
+      - description: Item data
+        in: body
+        name: item
+        required: true
+        schema:
+          $ref: '#/definitions/models.ItemModelCreate'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.ItemModel'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Adds new ingridient
+      tags:
+      - Inventory manipulation
+    put:
+      consumes:
+      - application/json
+      description: Change ingridient in the database by id. All fields are required,
+        otherwise default value will be used.
+      parameters:
+      - description: Item id and it's new data
+        in: body
+        name: item
+        required: true
+        schema:
+          $ref: '#/definitions/models.ItemModel'
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            $ref: '#/definitions/models.ItemModel'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      summary: Changes ingridient information
+      tags:
+      - Inventory manipulation
+  /inventory:
+    get:
+      description: Get complete list of all ingridients availible for user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ItemModel'
+      summary: Gets list of all ingridients
+      tags:
+      - Inventory manipulation
+  /inventory/search:
+    get:
+      description: Get list of ingridients filtering by it's name and/or parameters
+      parameters:
+      - in: query
+        name: alcoholmax
+        type: number
+      - in: query
+        name: alcoholmin
+        type: number
+      - in: query
+        name: isDry
+        type: boolean
+      - in: query
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ItemModel'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Gets list ingridients by filter
+      tags:
+      - Inventory manipulation
+  /ping:
+    get:
+      consumes:
+      - application/json
+      description: do ping
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: ping
+      tags:
+      - Common
+swagger: "2.0"
